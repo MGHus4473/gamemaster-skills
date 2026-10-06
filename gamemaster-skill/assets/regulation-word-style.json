@@ -1,0 +1,15 @@
+{
+  "page": {
+    "width_mm": 210,
+    "height_mm": 297,
+    "margins_mm": {"top": 25, "bottom": 25, "left": 25, "right": 25},
+    "header_mm": 12.5,
+    "footer_mm": 12.5
+  },
+  "fonts": {"cjk": "宋体", "heading_cjk": "黑体", "latin": "Times New Roman"},
+  "sizes_pt": {"title": 18, "subtitle": 10.5, "heading1": 14, "heading2": 12, "heading3": 12, "body": 12, "table": 10.5, "note": 10.5, "header_footer": 9},
+  "paragraph": {"line_multiple": 1.5, "space_after_pt": 6, "first_line_chars": 2, "clause_level_indent_chars": 2},
+  "table": {"line_multiple": 1.2, "padding_mm": 1.5, "header_fill": "EEEEEE", "border_color": "999999", "allow_row_split": false},
+  "header_text": "竞赛规程",
+  "page_numbers": true
+}

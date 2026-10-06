@@ -1,0 +1,7 @@
+{
+  "name": "gamemaster-document-runtime",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Optional local Word renderer dependency; no network is used by rendering scripts.",
+  "dependencies": { "docx": "9.8.1" }
+}

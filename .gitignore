@@ -1,0 +1,29 @@
+# Only reviewed skill source, blank templates, synthetic tests and release tools.
+/*
+!/.gitignore
+!/README.md
+!/CHANGELOG.md
+!/LICENSE
+!/LICENSE.md
+!/gamemaster-skill/
+!/ptty-skill/
+!/tools/
+!/tests/
+
+# Local runtime, user data and browser credentials never belong in the release.
+**/__pycache__/
+**/*.py[cod]
+**/.venv/
+**/node_modules/
+**/.env
+**/.env.*
+**/*.log
+**/*.har
+**/*session*.json
+**/*cookie*.json
+**/*credential*.json
+**/*storage-state*.json
+**/*.pem
+**/*.key
+**/*.p12
+**/*.pfx
