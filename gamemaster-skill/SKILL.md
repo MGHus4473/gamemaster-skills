@@ -14,7 +14,7 @@ description: 制作或核对羽毛球、乒乓球、网球、匹克球赛事的�
 2. **报名与调整**：读 [参赛名单](references/participant-roster.md)，接收表格、文字、文档或可辨认图片，保留来源与增补记录。报名与竞赛组不符时读 [并组与转项](references/registration-transition.md)；需要补录空间时读 [预留与替换](references/reserved-entries.md)。常用开赛建议8人，具体人/对/队门槛、并组及让分由本场确认，预留不凑真实人数。
 3. **竞赛方案**：读 [竞赛方案](references/competition-plan.md)，按最终真实项＋确认预留项核对分组、晋级、名次赛和容量；未定关键参数不输出正式方案。
 4. **抽签与对阵**：读 [独立抽签](references/draw.md) 和 [比赛结构](references/brackets.md)，使用本地ID、明确种子/轮空规则及单位回避。保留随机种子、签位、前场胜负或小组名次来源，不调用外部系统生成对阵。
-5. **日期与场地**：读 [时间编排](references/time-court-scheduling.md)。先问时段、小节、场地、休息、兼项口径与固定要求。禁止运动员重场和依赖倒置，满足休息后默认整体尽早结束，再兼顾单项收尾。
+5. **日期与场地**：读 [时间编排](references/time-court-scheduling.md)。确认时段、小节、场地、休息、兼项口径与固定要求，逐项记录硬约束来源。默认依次优化全赛结束、指定项目结束、各项目结束之和、同轮拆分及跨度、等待及逐场开始时间；保留用户明确的其他顺序。“混双优先”不要求其他项目更晚结束，不人为拖后其他项目。正式导出前独立检查硬约束及可接受的前移、换位与上游调整，输出指标、差异和等待原因；局部搜索不代表全局最优。
 6. **赛果与成绩**：读 [成绩处理](references/results.md)。按真实赛果校验比分、晋级、循环同分和名次；未赛、弃权、退赛分别记录。更正上游赛果先检查下游已开赛情况，不虚构冠军或空位比分。
 7. **文稿与交付**：开闭幕致辞、主持词和颁奖词读 [赛事文稿](references/ceremony.md)；Word/PDF/MD/文本/LaTeX读 [文档输出](references/regulation-output.md)。制作 Word 时另读 [排版规范](references/word-formatting.md)，优先用户模板，再应用默认字体、缩进、标题和表格样式。按 [文件与交接](references/file-workflow.md) 输出表格、变更记录和可核对的结构数据。
 

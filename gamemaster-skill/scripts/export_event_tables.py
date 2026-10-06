@@ -11,7 +11,7 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
 from draw_engine import digest, validate_project
-from schedule_engine import validate as validate_schedule, slots_for
+from schedule_engine import validate as validate_schedule, slots_for, acceptance, audit_tables
 from export_competition_plan import KEYS
 from results_engine import validate_rule
 
@@ -123,6 +123,9 @@ def export_schedule(data, result, output):
     require(result['slots'] == slots_for(data), 'Schedule grid differs from confirmed sessions')
     report = validate_schedule(data, result)
     require(report['complete'], 'Incomplete or invalid schedule: ' + str(report))
+    audit = acceptance(data, result)
+    require(audit['ready_for_export'], 'Schedule needs source confirmation or local improvement: ' +
+            json.dumps({k: audit[k] for k in ('sources_complete', 'local_search')}, ensure_ascii=False))
     matches = {m['id']: m for m in data['matches']}
     assignments = {(a['slot_index'], a['court']): a for a in result['assignments']}
     rows, detail = [], []
@@ -156,6 +159,8 @@ def export_schedule(data, result, output):
         ['参数', json.dumps({k: v for k, v in data.items() if k != 'matches'}, ensure_ascii=False)],
         ['校验', json.dumps(report, ensure_ascii=False)],
         ['候选口径', data['conflict_scope']], ['时间口径', '计划时间，实际超时须更新休息及后续场次']])
+    for title, rows in audit_tables(data, result, audit).items():
+        table(book, title, rows[0], rows[1:])
     return save(book, output)
 
 

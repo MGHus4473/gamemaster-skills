@@ -29,6 +29,10 @@ def export(data, result, template, output, review, core_skill=None):
     report = engine.validate(data, result)
     if not report['complete']:
         raise ValueError('Refusing formal export: ' + str(report))
+    audit = engine.acceptance(data, result)
+    if not audit['ready_for_export']:
+        raise ValueError('Schedule needs source confirmation or local improvement: ' +
+                         json.dumps({k: audit[k] for k in ('sources_complete', 'local_search')}, ensure_ascii=False))
     matches = {m['id']: m for m in data['matches']}
     if any(not m.get('platform_match_id') for m in matches.values()):
         raise ValueError('Real platform IDs required for PTTY import')
@@ -121,6 +125,10 @@ def export(data, result, template, output, review, core_skill=None):
                   if data['conflict_scope'] == 'known' else '按所有可能选手保守检查；互斥分支单独核对。'])
     config.append(['预计时长', '所有时间为编排预计；实际超时后按实际结束时间复核休息并调整未开赛场次。'])
     config.append(['测试种子', data.get('seed_note', '')])
+    for title, rows in engine.audit_tables(data, result, audit).items():
+        audit_sheet = book.create_sheet(title)
+        for row in rows:
+            audit_sheet.append(row)
     for s in book:
         s.freeze_panes = 'A2'
         s.auto_filter.ref = s.dimensions

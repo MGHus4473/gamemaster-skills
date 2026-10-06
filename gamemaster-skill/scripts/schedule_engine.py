@@ -9,6 +9,8 @@ import argparse
 import hashlib
 import json
 import random
+from copy import deepcopy
+from collections import defaultdict
 from datetime import datetime, timedelta
 from itertools import combinations
 from pathlib import Path
@@ -45,11 +47,22 @@ def slots_for(data):
 
 
 def prepare(data):
+    if not data['sessions']:
+        raise ValueError('At least one confirmed session is required')
     slots = slots_for(data)
     matches = data['matches']
     by_id = {m['id']: m for m in matches}
     if len(by_id) != len(matches) or not matches:
         raise ValueError('Match IDs must be unique; matches cannot be empty')
+    objective_order(data)
+    for relation in data.get('strict_finish_order', []):
+        projects = {m['project_id'] for m in matches}
+        if (relation.get('before') not in projects or relation.get('after') not in projects
+                or relation['before'] == relation['after']
+                or relation.get('source', {}).get('kind') != 'user'
+                or not isinstance(relation['source'].get('reference'), str)
+                or not relation['source']['reference'].strip()):
+            raise ValueError('Strict finish order needs distinct projects and an explicit user source')
     if data.get('conflict_scope') not in ('known', 'possible'):
         raise ValueError('Confirm conflict_scope: known or possible')
     if data.get('rest_basis') not in ('elapsed', 'active_scenes'):
@@ -236,11 +249,436 @@ def validate(data, result):
             if not rest_ok(data, ra, rb):
                 errors.append('Athlete conflict/rest: ' + a + ', ' + b)
     missing = sorted(matches.keys() - assigned.keys())
+    if not missing and not errors:
+        for relation in data.get('strict_finish_order', []):
+            ends = {p: max(r['end'] for r in rows if r['project_id'] == p)
+                    for p in (relation['before'], relation['after'])}
+            if ends[relation['before']] >= ends[relation['after']]:
+                errors.append('Explicit strict finish order violation: ' + relation['before'] + ' -> ' + relation['after'])
     if sorted(result.get('unscheduled', [])) != missing:
         errors.append('Unscheduled list mismatch')
     return {'valid': not errors, 'complete': not missing and not errors, 'errors': errors,
             'scheduled': len(assigned), 'unscheduled': missing,
             'conflict_scope': data['conflict_scope'], 'rest_basis': data['rest_basis']}
+
+
+DEFAULT_OBJECTIVES = ('makespan', 'priority_completion', 'project_completion_sum',
+                      'round_splits', 'round_span_minutes', 'total_wait_minutes', 'start_times')
+
+
+def objective_order(data):
+    objective = data.get('objective', 'makespan')
+    if objective not in ('makespan', 'project_first'):
+        raise ValueError('objective must be makespan or project_first')
+    priority = data.get('priority_projects', [])
+    projects = {m['project_id'] for m in data['matches']}
+    if len(set(priority)) != len(priority) or not set(priority) <= projects:
+        raise ValueError('Invalid priority projects')
+    if objective == 'project_first' and not priority:
+        raise ValueError('project_first requires an explicitly selected priority project')
+    default = list(DEFAULT_OBJECTIVES)
+    if objective == 'project_first':
+        default[:2] = default[1::-1]
+    order = data.get('objective_order', default)
+    if not isinstance(order, list) or len(order) != len(default) or set(order) != set(default):
+        raise ValueError('objective_order must be a permutation of all seven supported objectives')
+    return order
+
+
+def constraint_catalog(data):
+    """Keep unknown provenance visible; never turn inferred preferences into hard rules."""
+    supplied = data.get('constraint_sources', {})
+    if not isinstance(supplied, dict):
+        raise ValueError('constraint_sources must be a mapping')
+    for source in supplied.values():
+        if (not isinstance(source, dict) or source.get('kind') not in ('user', 'regulation', 'structure')
+                or not isinstance(source.get('reference'), str) or not source['reference'].strip()):
+            raise ValueError('Each constraint source needs kind and reference')
+    rows = []
+
+    def add(key, value, structural=False, source=None):
+        origin = source or ({'kind': 'structure', 'reference': key} if structural else
+                            supplied.get(key, supplied.get(key.split('.')[-1], supplied.get('*'))))
+        rows.append({'id': key, 'value': value, 'hard': True,
+                     'source': origin or {'kind': 'unverified_input', 'reference': 'input:' + key},
+                     'source_verified': origin is not None})
+
+    for key in ('courts', 'sessions', 'slot_minutes', 'conflict_scope', 'rest_basis'):
+        add(key, data[key])
+    add('rest_minutes' if data['rest_basis'] == 'elapsed' else 'rest_scenes',
+        data['rest_minutes'] if data['rest_basis'] == 'elapsed' else data['rest_scenes'])
+    if data.get('turnover_minutes'):
+        add('turnover_minutes', data['turnover_minutes'])
+    add('match_completeness', 'every actual match exactly once', True)
+    add('court_exclusion', 'one match per court and slot', True)
+    add('athlete_exclusion', 'stable athlete IDs, across projects within confirmed scope', True)
+    if data.get('outcome_disjoint_pairs'):
+        add('outcome_disjoint_pairs', data['outcome_disjoint_pairs'], True)
+    for m in data['matches']:
+        if m.get('predecessors'):
+            add('matches.' + m['id'] + '.predecessors', m['predecessors'], True)
+        for key in ('duration_minutes', 'allowed_courts', 'not_before', 'finish_by', 'fixed'):
+            if key in m:
+                add('matches.' + m['id'] + '.' + key, m[key])
+    for i, relation in enumerate(data.get('strict_finish_order', [])):
+        add('strict_finish_order.' + str(i), [relation['before'], relation['after']], source=relation['source'])
+    return rows
+
+
+def round_groups(matches):
+    groups = defaultdict(list)
+    for mid, m in matches.items():
+        # Missing round metadata must not invent one giant synchronous round.
+        if m.get('round') is not None:
+            groups[(m['project_id'], str(m.get('stage', 1)), str(m['round']))].append(mid)
+    return [sorted(ids) for _, ids in sorted(groups.items())]
+
+
+def release_time(data, earlier, slots):
+    if data['rest_basis'] == 'elapsed':
+        return dt(earlier['end']) + timedelta(minutes=data['rest_minutes'])
+    idx = earlier['slot_index'] + data['rest_scenes'] + 1
+    return dt(slots[idx]['start']) if idx < len(slots) else datetime.max
+
+
+def metrics(data, result, context=None):
+    slots, matches, _, conflicts = context or prepare(data)
+    placed = {r['match_id']: r for r in result['assignments']}
+    origin = dt(data['sessions'][0]['start'])
+    minutes = lambda value: int((dt(value) - origin).total_seconds() // 60)
+    projects = sorted({m['project_id'] for m in matches.values()})
+    ends = {p: max((r['end'] for r in placed.values() if r['project_id'] == p), default=None) for p in projects}
+    complete = {p: all(mid in placed for mid, m in matches.items() if m['project_id'] == p) for p in projects}
+    sentinel = 10**12
+    finish = {p: minutes(ends[p]) if complete[p] else sentinel for p in projects}
+    splits = span = waiting = 0
+    for group in round_groups(matches):
+        starts = {placed[mid]['start'] for mid in group if mid in placed}
+        splits += max(0, len(starts) - 1)
+        if starts:
+            span += minutes(max(starts)) - minutes(min(starts))
+    for mid, rec in placed.items():
+        m = matches[mid]
+        lower = max(origin, dt(m.get('not_before', data['sessions'][0]['start'])))
+        related = set(m.get('predecessors', [])) | conflicts[mid]
+        for other in related & placed.keys():
+            if placed[other]['start'] < rec['start']:
+                lower = max(lower, release_time(data, placed[other], slots))
+        # Calendar waiting, not claimed to be every athlete's on-site waiting.
+        waiting += max(0, int((dt(rec['start']) - lower).total_seconds() // 60))
+    indexes = {r['slot_index'] for r in placed.values()}
+    return {'makespan': max(finish.values()),
+            'priority_completion': [finish[p] for p in data.get('priority_projects', [])],
+            'project_completion_sum': sum(finish.values()), 'round_splits': splits,
+            'round_span_minutes': span, 'total_wait_minutes': waiting,
+            'start_times': [minutes(placed[mid]['start']) if mid in placed else sentinel for mid in sorted(matches)],
+            'start_time_match_order': sorted(matches), 'project_end_times': ends,
+            'expected_end': max((r['end'] for r in placed.values()), default=None),
+            'total_matches': len(matches), 'scheduled_matches': len(placed),
+            'occupied_scenes': len(indexes),
+            'scene_span': max(indexes) - min(indexes) + 1 if indexes else 0,
+            'time_origin': origin.isoformat(timespec='minutes')}
+
+
+def score(data, values):
+    return tuple(tuple(values[k]) if isinstance(values[k], list) else values[k] for k in objective_order(data))
+
+
+def first_changed_objective(data, before, after):
+    return next((k for k in objective_order(data) if before[k] != after[k]), None)
+
+
+def placement_violations(data, context, placed, mid, rec):
+    """Check both directions, including all unchanged/fixed successors and cross-project athletes."""
+    slots, matches, _, conflicts = context
+    m = matches[mid]; failures = []
+
+    def fail(code, constraint, other=None):
+        failures.append({'category': 'hard_constraint', 'code': code, 'constraint': constraint,
+                         'related_match': other,
+                         'rest_constraint': ('rest_minutes' if data['rest_basis'] == 'elapsed' else 'rest_scenes')
+                         if 'rest' in code else None})
+
+    idx = rec['slot_index']
+    if rec['court'] not in slots[idx]['courts']:
+        fail('court_unavailable', 'sessions')
+    if not allowed(data, m, rec):
+        for key in ('allowed_courts', 'not_before', 'finish_by', 'fixed'):
+            if key in m and not allowed(data, {key: m[key]}, rec):
+                fail('window_or_fixed', 'matches.' + mid + '.' + key)
+    for other, row in placed.items():
+        if other == mid:
+            continue
+        if idx == row['slot_index'] and rec['court'] == row['court']:
+            fail('court_occupied', 'court_exclusion', other)
+        if other in conflicts[mid]:
+            a, b = sorted((row, rec), key=lambda r: r['start'])
+            if not rest_ok(data, a, b):
+                fail('athlete_overlap_or_rest', 'athlete_exclusion', other)
+        if mid in matches[other].get('predecessors', []) and not rest_ok(data, rec, row):
+            fail('successor_dependency_or_rest', 'matches.' + other + '.predecessors', other)
+    for parent in m.get('predecessors', []):
+        if parent not in placed or not rest_ok(data, placed[parent], rec):
+            fail('predecessor_dependency_or_rest', 'matches.' + mid + '.predecessors', parent)
+    trial = dict(placed); trial[mid] = rec
+    for i, relation in enumerate(data.get('strict_finish_order', [])):
+        a, b = relation['before'], relation['after']
+        ends = {p: max((r['end'] for r in trial.values() if r['project_id'] == p), default='') for p in (a, b)}
+        if ends[a] >= ends[b]:
+            fail('explicit_strict_finish_order', 'strict_finish_order.' + str(i))
+    return failures
+
+
+def moved_records(data, context, placed, targets):
+    """Exact court matching for a proposed set of slot changes, then whole-neighborhood legality."""
+    slots, matches, _, _ = context
+    trial = {mid: r for mid, r in placed.items() if mid not in targets}
+    groups = defaultdict(list)
+    for mid, idx in targets.items():
+        if not 0 <= idx < len(slots):
+            return None
+        groups[idx].append(mid)
+    for idx, mids in sorted(groups.items()):
+        occupied = {r['court'] for r in trial.values() if r['slot_index'] == idx}
+        options = {mid: [c for c in slots[idx]['courts'] if c not in occupied
+                         and allowed(data, matches[mid], record_for(data, matches[mid], slots[idx], c))] for mid in mids}
+        owners = {}
+
+        def augment(mid, seen):
+            for court in options[mid]:
+                if court in seen:
+                    continue
+                seen.add(court)
+                if court not in owners or augment(owners[court], seen):
+                    owners[court] = mid
+                    return True
+            return False
+
+        if any(not augment(mid, set()) for mid in sorted(mids, key=lambda x: (len(options[x]), x))):
+            return None
+        for court, mid in owners.items():
+            trial[mid] = record_for(data, matches[mid], slots[idx], court)
+    if any(placement_violations(data, context, trial, mid, trial[mid]) for mid in targets):
+        return None
+    return trial
+
+
+def search_settings(data):
+    settings = {'max_evaluations': 100000, 'max_chain_matches': 6, 'swaps': True}
+    supplied = data.get('local_search', {})
+    if set(supplied) - settings.keys():
+        raise ValueError('Unknown local_search setting')
+    settings.update(supplied)
+    for k in ('max_evaluations', 'max_chain_matches'):
+        if type(settings[k]) is not int or settings[k] < 1:
+            raise ValueError(k + ' must be a positive integer')
+    if type(settings['swaps']) is not bool:
+        raise ValueError('local_search.swaps must be boolean')
+    return settings
+
+
+def proposals(context, placed, settings):
+    _, matches, _, _ = context
+    ids = sorted(placed)
+    yield 'single', ({mid: idx} for mid in ids for idx in range(placed[mid]['slot_index']))
+    groups = set()
+    for group in round_groups(matches):
+        if len(group) > 1:
+            groups.add(tuple(group))
+        # Also move the same-round cohort sharing a start; a fixed earlier
+        # cohort must not prevent this subset from advancing together.
+        cohorts = defaultdict(list)
+        for mid in group:
+            cohorts[placed[mid]['slot_index']].append(mid)
+        groups.update(tuple(ids) for ids in cohorts.values() if len(ids) > 1)
+    yield 'round_group', ({mid: placed[mid]['slot_index'] - shift for mid in group}
+                          for group in sorted(groups) for shift in range(1, min(placed[m]['slot_index'] for m in group) + 1))
+    chains = set()
+    for mid in ids:
+        ancestors, todo = {mid}, [mid]
+        while todo:
+            for parent in matches[todo.pop()].get('predecessors', []):
+                if parent not in ancestors:
+                    ancestors.add(parent); todo.append(parent)
+        if 1 < len(ancestors) <= settings['max_chain_matches']:
+            chains.add(tuple(sorted(ancestors)))
+    yield 'ancestor_chain', ({mid: placed[mid]['slot_index'] - shift for mid in chain}
+                            for chain in sorted(chains) for shift in range(1, min(placed[m]['slot_index'] for m in chain) + 1))
+    if settings['swaps']:
+        yield 'pair_swap', ({a: placed[b]['slot_index'], b: placed[a]['slot_index']}
+                            for a, b in combinations(ids, 2) if placed[a]['slot_index'] != placed[b]['slot_index'])
+
+
+def find_improvement(data, result, context=None, limit=None):
+    context = context or prepare(data)
+    placed = {r['match_id']: r for r in result['assignments']}
+    settings = search_settings(data)
+    maximum = settings['max_evaluations'] if limit is None else limit
+    before = metrics(data, result, context); baseline = score(data, before)
+    counts, exhausted, count = {}, [], 0
+    for kind, changes in proposals(context, placed, settings):
+        counts[kind] = 0
+        for targets in changes:
+            if count >= maximum:
+                return None, {'status': 'search_limit', 'evaluations': count, 'counts': counts, 'exhausted': exhausted}
+            count += 1; counts[kind] += 1
+            trial = moved_records(data, context, placed, targets)
+            if trial is None:
+                continue
+            after = metrics(data, {'assignments': list(trial.values())}, context)
+            if score(data, after) < baseline:
+                return trial, {'status': 'improvement_found', 'kind': kind, 'evaluations': count,
+                               'counts': counts, 'exhausted': exhausted,
+                               'objective': first_changed_objective(data, before, after),
+                               'changes': [{'match_id': mid, 'before': placed[mid], 'after': trial[mid]}
+                                           for mid in sorted(targets)], 'before': before, 'after': after}
+        exhausted.append(kind)
+    return None, {'status': 'no_improvement_in_checked_neighborhood', 'evaluations': count,
+                  'counts': counts, 'exhausted': exhausted, 'global_optimality_proven': False,
+                  'swap_status': 'bounded_search_no_improvement' if settings['swaps'] else 'not_requested',
+                  'infeasibility_proven': False}
+
+
+def explain_waits(data, result, context=None):
+    context = context or prepare(data)
+    slots, matches, _, _ = context
+    placed = {r['match_id']: r for r in result['assignments']}
+    before = metrics(data, result, context); old_score = score(data, before)
+    focus = data.get('focus_matches', [mid for mid, r in placed.items()
+                                      if r['end'] == before['project_end_times'][r['project_id']]])
+    if not set(focus) <= matches.keys():
+        raise ValueError('Unknown focus match')
+    reports = []
+    for mid in focus:
+        rec = placed[mid]; details = []; earliest = None
+        for slot in slots[:rec['slot_index'] + 1]:
+            alternatives = []; legal = False
+            for court in slot['courts']:
+                candidate = record_for(data, matches[mid], slot, court)
+                failures = placement_violations(data, context, placed, mid, candidate)
+                if not failures:
+                    legal = True
+                    trial = dict(placed); trial[mid] = candidate
+                    after = metrics(data, {'assignments': list(trial.values())}, context)
+                    new_score = score(data, after)
+                    failures = [{'category': 'optimization_tradeoff' if new_score > old_score else
+                                             'avoidable_wait' if new_score < old_score else 'objective_tie',
+                                 'objective': first_changed_objective(data, before, after)}]
+                alternatives.append({'court': court, 'reasons': failures})
+            if legal and earliest is None:
+                earliest = slot['start']
+            if slot['index'] < rec['slot_index']:
+                free = [c for c in slot['courts'] if not any(r['slot_index'] == slot['index'] and r['court'] == c
+                        for other, r in placed.items() if other != mid)]
+                details.append({'scene': slot['scene'], 'start': slot['start'], 'free_courts': free,
+                                'alternatives': alternatives})
+        parents = [{'match_id': p, 'end': placed[p]['end'],
+                    'rest_release': release_time(data, placed[p], slots).isoformat(timespec='minutes')}
+                   for p in matches[mid].get('predecessors', [])]
+        reports.append({'match_id': mid, 'scheduled_start': rec['start'], 'predecessors': parents,
+                        'earliest_legal_start_with_other_matches_fixed': earliest,
+                        'earlier_scenes': details, 'infeasibility_proven': False,
+                        'scope': 'single-match relocation on supplied grid; all other matches fixed'})
+    return reports
+
+
+def acceptance(data, result, explain=True):
+    context = prepare(data)
+    hard = validate(data, result)
+    digest = hashlib.sha256(json.dumps(data, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
+    if (result.get('event_id') != data['event_id'] or result.get('input_sha256') != digest
+            or result.get('slots') != context[0]):
+        hard['errors'].append('Event/input/grid version mismatch')
+        hard.update(valid=False, complete=False)
+    sources = constraint_catalog(data)
+    if not hard['complete']:
+        return {'hard_constraints': hard, 'ready_for_export': False, 'quality_checked': False,
+                'constraint_sources': sources, 'global_optimality_proven': False}
+    _, audit = find_improvement(data, result, context)
+    clean = audit['status'] == 'no_improvement_in_checked_neighborhood'
+    known_sources = all(c['source_verified'] for c in sources)
+    return {'hard_constraints': hard, 'objective_order': objective_order(data),
+            'metrics': metrics(data, result, context), 'constraint_sources': sources,
+            'sources_complete': known_sources, 'quality_checked': clean,
+            'ready_for_export': clean and known_sources,
+            'local_search': audit, 'global_optimality_proven': False,
+            'waiting_explanations': explain_waits(data, result, context) if explain else []}
+
+
+def improve(data, result):
+    """Improve a complete candidate without changing inputs, identities or hard rules."""
+    context = prepare(data)
+    digest = hashlib.sha256(json.dumps(data, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
+    if (result.get('event_id') != data['event_id'] or result.get('input_sha256') != digest
+            or result.get('slots') != context[0]):
+        raise ValueError('Candidate does not match event/input/grid version')
+    if not validate(data, result)['complete']:
+        raise ValueError('Local improvement requires a complete hard-valid candidate')
+    output = deepcopy(result)
+    before = metrics(data, output, context)
+    moves, count = [], 0
+    maximum = search_settings(data)['max_evaluations']
+    while True:
+        trial, audit = find_improvement(data, output, context, max(0, maximum - count))
+        count += audit['evaluations']
+        if trial is None:
+            break
+        moves.append({k: audit[k] for k in ('kind', 'objective', 'changes', 'before', 'after')})
+        output['assignments'] = sorted(trial.values(), key=lambda r: (r['slot_index'], str(r['court']), r['match_id']))
+    output.update(status='complete', objective_order=objective_order(data), optimality_proven=False,
+                  metrics=metrics(data, output, context), constraint_sources=constraint_catalog(data))
+    output['optimization'] = {'before': before, 'after': output['metrics'], 'moves': moves,
+                              'evaluations': count, 'termination': audit,
+                              'model': 'one-slot local-time grid; supplied athletes, DAG, windows and fixed arrangements',
+                              'neighborhood': search_settings(data), 'global_optimality_proven': False}
+    output['validation'] = validate(data, output)
+    output['acceptance'] = acceptance(data, output)
+    return output
+
+
+def audit_tables(data, result, report):
+    """Small, untruncated rows shared by offline and platform-file exporters."""
+    encode = lambda value: json.dumps(value, ensure_ascii=False)
+    tables = {}
+    values = report['metrics']
+    before = result.get('optimization', {}).get('before', {})
+    tables['优化指标'] = [['指标', '优化前（生成记录）', '当前（独立重算）']]
+    for key in report['objective_order'] + ['total_matches', 'occupied_scenes', 'scene_span', 'expected_end', 'time_origin', 'project_end_times']:
+        # Per-match start vectors can exceed the Excel cell length limit.
+        if key == 'start_times':
+            tables['优化指标'].append([key, '见逐场开始指标', '见逐场开始指标'])
+            continue
+        tables['优化指标'].append([key, encode(before.get(key)), encode(values[key])])
+    tables['逐场开始指标'] = [['场次', '优化前分钟数（生成记录）', '当前分钟数（独立重算）']]
+    old_starts = dict(zip(before.get('start_time_match_order', []), before.get('start_times', [])))
+    tables['逐场开始指标'] += [[mid, old_starts.get(mid), start]
+                              for mid, start in zip(values['start_time_match_order'], values['start_times'])]
+    tables['约束来源'] = [['约束', '取值', '来源类型', '依据', '来源已记录']]
+    tables['约束来源'] += [[r['id'], encode(r['value']), r['source']['kind'],
+                           r['source']['reference'], r['source_verified']] for r in report['constraint_sources']]
+    tables['前移记录'] = [['调整序号', '搜索类型', '首个改善目标', '场次', '原开始', '新开始', '原场地', '新场地']]
+    for i, move in enumerate(result.get('optimization', {}).get('moves', []), 1):
+        tables['前移记录'] += [[i, move['kind'], move['objective'], c['match_id'], c['before']['start'],
+                              c['after']['start'], c['before']['court'], c['after']['court']] for c in move['changes']]
+    tables['等待解释'] = [['场次', '当前开始', '其他比赛固定时最早合法开始', '前置场次', '前置结束', '休息释放']]
+    tables['早场阻塞'] = [['场次', '更早场序', '开始', '场地', '场地空闲', '类别', '原因', '约束/目标', '关联场次', '休息依据']]
+    for item in report['waiting_explanations']:
+        for parent in item['predecessors'] or [{}]:
+            tables['等待解释'].append([item['match_id'], item['scheduled_start'],
+                item['earliest_legal_start_with_other_matches_fixed'], parent.get('match_id'), parent.get('end'), parent.get('rest_release')])
+        for slot in item['earlier_scenes']:
+            for alternative in slot['alternatives']:
+                for reason in alternative['reasons']:
+                    tables['早场阻塞'].append([item['match_id'], slot['scene'], slot['start'], alternative['court'],
+                        alternative['court'] in slot['free_courts'], reason['category'], reason.get('code'),
+                        reason.get('constraint', reason.get('objective')), reason.get('related_match'), reason.get('rest_constraint')])
+    tables['优化验收'] = [['事项', '内容'], ['目标顺序', encode(report['objective_order'])],
+        ['搜索范围', encode(search_settings(data))], ['验收搜索证据', encode(report['local_search'])],
+        ['正式导出条件合格', report['ready_for_export']], ['全局最优已证明', False],
+        ['模型范围', '单场占一格；当前输入的人员口径、依赖、窗口、休息和固定安排'],
+        ['结论', '仅在已检查的单场、同轮整体平移、有限上游链及换位范围内未找到改进；不证明全局最优或不可行'],
+        ['优化前与调整记录', '来自候选生成记录；当前指标及验收在导出时独立重算']]
+    return tables
 
 
 def schedule(data):
@@ -322,33 +760,43 @@ def schedule(data):
                        and (future in conflicts[m['id']] or m['id'] in matches[future].get('predecessors', []))
                        and not rest_ok(data, rec, fixed) for future, fixed in mandatory.items()):
                     continue
+                # A strict ending order is enforced only when explicitly supplied.
+                strict_block = False
+                for relation in data.get('strict_finish_order', []):
+                    if m['project_id'] != relation['after']:
+                        continue
+                    after_left = [x for x in matches if matches[x]['project_id'] == relation['after'] and x not in placed]
+                    if after_left != [m['id']]:
+                        continue
+                    before_ids = [x for x in matches if matches[x]['project_id'] == relation['before']]
+                    if (any(x not in placed for x in before_ids)
+                            or max(placed[x]['end'] for x in before_ids) >= rec['end']):
+                        strict_block = True
+                if strict_block:
+                    continue
                 placed[m['id']] = rec
                 available_courts.remove(rec['court'])
-        finish = {p: max((r['slot_index'] for r in placed.values() if r['project_id'] == p), default=-1)
-                  if sum(r['project_id'] == p for r in placed.values()) == project_counts[p]
-                  else len(slots) + len(matches) for p in order}
-        # Actual finish time matters too when durations differ within a slot.
-        end_times = {p: max((dt(r['end']) for r in placed.values() if r['project_id'] == p),
-                            default=datetime.max)
-                     if sum(r['project_id'] == p for r in placed.values()) == project_counts[p]
-                     else datetime.max for p in order}
-        finish_objectives = ((*(end_times[p] for p in priority), max(end_times.values()))
-                             if objective == 'project_first' else
-                             (max(end_times.values()), *(end_times[p] for p in priority)))
-        score = (len(matches) - len(placed), *finish_objectives,
-                 len({r['slot_index'] for r in placed.values()}), sum(finish.values()),
-                 *(finish[p] for p in order))
-        if best_key is None or score < best_key:
-            best_key = score
-            best = {'schema': 'gamemaster.schedule.v1', 'event_id': data['event_id'],
+        candidate = {'schema': 'gamemaster.schedule.v1', 'event_id': data['event_id'],
                     'input_sha256': hashlib.sha256(json.dumps(data, sort_keys=True, ensure_ascii=False).encode()).hexdigest(),
-                    'algorithm': 'seeded-list-scheduling', 'objective': objective,
+                    'algorithm': 'seeded-list-scheduling+bounded-local-search', 'objective': objective,
                     'attempt': attempt, 'attempts': attempts,
                     'optimality_proven': False, 'priority_order': order, 'slots': slots,
                     'assignments': sorted(placed.values(), key=lambda r: (r['slot_index'], r['court'])),
                     'unscheduled': sorted(matches.keys() - placed.keys())}
+        # Only hard-valid candidates participate in objective comparisons.
+        if not validate(data, candidate)['valid']:
+            continue
+        candidate_key = (len(matches) - len(placed), *score(data, metrics(data, candidate,
+                         (slots, matches, depth, conflicts))))
+        if best_key is None or candidate_key < best_key:
+            best_key, best = candidate_key, candidate
+    if best is None:
+        best = dict(candidate, assignments=[], unscheduled=sorted(matches))
     best['validation'] = validate(data, best)
     best['status'] = 'complete' if best['validation']['complete'] else 'search_incomplete'
+    if best['validation']['complete']:
+        return improve(data, best)
+    best['acceptance'] = acceptance(data, best)
     return best
 
 
@@ -356,8 +804,18 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('input', type=Path)
     parser.add_argument('output', type=Path)
+    parser.add_argument('--improve-existing', type=Path, help='Improve a complete candidate JSON locally')
+    parser.add_argument('--check', type=Path, help='Independently audit a candidate; output is an audit JSON')
     args = parser.parse_args()
-    result = schedule(json.loads(args.input.read_text()))
+    if args.check and args.improve_existing:
+        parser.error('--check and --improve-existing are mutually exclusive')
+    data = json.loads(args.input.read_text())
+    if args.check:
+        report = acceptance(data, json.loads(args.check.read_text()))
+        args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2))
+        raise SystemExit(0 if report['ready_for_export'] else 2)
+    result = (improve(data, json.loads(args.improve_existing.read_text())) if args.improve_existing
+              else schedule(data))
     args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2))
     print(json.dumps({'status': result['status'], **result['validation']}, ensure_ascii=False))
     raise SystemExit(0 if result['validation']['complete'] else 2)

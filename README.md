@@ -70,10 +70,12 @@ npm --prefix gamemaster-skill install
 
 ## 开发验证
 
+编排输入使用 `constraint_sources` 记录硬约束依据；旧输入未记录来源时，须补齐后重新生成才能正式导出。项目优先、优化目标、前移验收及参数见 [时间与场地编排](gamemaster-skill/references/time-court-scheduling.md)。
+
 ```bash
 PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -p 'test_*.py'
 node tests/test_ptty_site_guard.mjs
 python3 tools/release_check.py --staged
 ```
 
-这些合成测试覆盖运动身份、网站入口、公开链接与发布脱敏边界，不访问线上赛事。提交前检查实际暂存内容；检查方式及限制见 [发布检查](tools/README.md)，更新记录见 [CHANGELOG](CHANGELOG.md)。
+这些合成测试覆盖编排休息与依赖、局部优化、导出验收，以及运动身份、网站入口、公开链接与发布脱敏边界，不访问线上赛事。提交前检查实际暂存内容；检查方式及限制见 [发布检查](tools/README.md)，更新记录见 [CHANGELOG](CHANGELOG.md)。
