@@ -13,6 +13,50 @@ from openpyxl.utils import get_column_letter
 from core_bridge import load_core
 
 
+def reference_values(sheet):
+    # Java-produced templates may preserve CRLF; XML reserialization uses LF.
+    return [tuple(v.replace('\r\n', '\n').replace('\r', '\n') if isinstance(v, str) else v for v in row)
+            for row in sheet.values]
+
+
+def match_cards(sheet, matches):
+    """Read the observed populated match-reference sheet without rewriting it."""
+    if not any(c.value is not None for row in sheet for c in row):
+        return {}
+    if sheet.merged_cells or any(c.data_type == 'f' for row in sheet for c in row):
+        raise ValueError('Match-reference sheet must use unmerged static cells')
+    header = [c.value for c in sheet[1]]
+    if header[:4] != ['项目ID', '项目全称', '赛事种类', '轮次'] or any(v is not None for v in header[4:]):
+        raise ValueError('Unrecognized match-reference headers')
+    by_id = {m['platform_match_id']: m for m in matches.values()}
+    cards = {}
+    for row in sheet.iter_rows(min_row=2, values_only=True):
+        if all(v in (None, '') for v in row):
+            continue
+        project, title, fmt, round_label = row[:4]
+        if list(row[:4]) == header[:4] and all(v in (None, '') for v in row[4:]):
+            continue  # The platform repeats the exact header between projects/stages.
+        if not any(v not in (None, '') for v in row[4:]):
+            raise ValueError('Match-reference row contains no matches')
+        for value in row[4:]:
+            if value in (None, ''):
+                continue
+            lines = value.rstrip('\r\n').splitlines() if isinstance(value, str) else []
+            if len(lines) not in (6, 7) or lines[-1] not in by_id or lines[-1] in cards:
+                raise ValueError('Unknown, duplicate or malformed match-reference card')
+            m = by_id[lines[-1]]
+            if len(lines) == 7 and m.get('platform_event_type') not in ('MD', 'WD', 'XD', 'SD'):
+                raise ValueError('Two member rows require a verified doubles event type')
+            expected = (m.get('platform_project_id'), m.get('project_name'), m.get('platform_format'),
+                        '第' + str(m.get('round')) + '轮', m.get('platform_display_code'))
+            if not all(expected) or (project, title, fmt, round_label, lines[0]) != expected:
+                raise ValueError('Match-reference project, round or display code differs from verified mapping')
+            cards[lines[-1]] = value
+    if set(cards) != set(by_id):
+        raise ValueError('Match-reference sheet must cover every scheduled match exactly once')
+    return cards
+
+
 def export(data, result, template, output, review, core_skill=None):
     output, review = Path(output), Path(review)
     if output.resolve() == review.resolve() or output.exists() or review.exists():
@@ -42,8 +86,8 @@ def export(data, result, template, output, review, core_skill=None):
     wb = load_workbook(template)
     if wb.sheetnames != ['赛事编排工作表', '场次工作表']:
         raise ValueError('Unrecognized scheduling template')
-    if any(c.value is not None for row in wb.worksheets[1] for c in row):
-        raise ValueError('Nonempty secondary sheet needs a verified adapter; refusing stale template data')
+    cards = match_cards(wb.worksheets[1], matches)
+    secondary_values = reference_values(wb.worksheets[1])
     ws = wb.worksheets[0]
     if [ws.cell(1, n).value for n in (1, 2, 3)] != ['日期', '时间', '场序']:
         raise ValueError('Unrecognized fixed columns')
@@ -66,12 +110,15 @@ def export(data, result, template, output, review, core_skill=None):
                 row.append('')
                 continue
             m = matches[rec['match_id']]
-            a, b = m['sides']
-            text = [m['code'], m['template_title'],
-                    a.get('position_label', '?') + '-' + b.get('position_label', '?'),
-                    a.get('club', '') + '   VS  ' + b.get('club', ''),
-                    a['label'] + '    ' + b['label'], m['platform_match_id'], '']
-            row.append('\r\n'.join(text))
+            if m['platform_match_id'] in cards:
+                row.append(cards[m['platform_match_id']])
+            else:
+                a, b = m['sides']
+                text = [m['code'], m['template_title'],
+                        a.get('position_label', '?') + '-' + b.get('position_label', '?'),
+                        a.get('club', '') + '   VS  ' + b.get('club', ''),
+                        a['label'] + '    ' + b['label'], m['platform_match_id'], '']
+                row.append('\r\n'.join(text))
         for col, value in enumerate(row, 1):
             c = ws.cell(slot['index'] + 2, col, value)
             c._style = copy(styles[min(col - 1, 3)])
@@ -92,6 +139,8 @@ def export(data, result, template, output, review, core_skill=None):
     wb.save(output)
     # Re-open the exact upload artifact; compare time, court, scene and IDs.
     check = load_workbook(output, data_only=False)
+    if reference_values(check.worksheets[1]) != secondary_values:
+        raise ValueError('Saved match-reference sheet changed')
     actual = {}
     for row in check.worksheets[0].iter_rows(min_row=2):
         for i, c in enumerate(row[3:]):
@@ -153,7 +202,8 @@ def export(data, result, template, output, review, core_skill=None):
     config.column_dimensions['B'].width = 100
     book.save(review)
     return {'matches': len(actual), 'rows': len(result['slots']), 'courts': len(data['courts']),
-            'import': str(output), 'review': str(review), 'workbook_readback': 'passed'}
+            'import': str(output), 'review': str(review), 'workbook_readback': 'passed',
+            'verified_reference_cards': len(cards), 'preserved_reference_sheet': True}
 
 
 if __name__ == '__main__':

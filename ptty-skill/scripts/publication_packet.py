@@ -70,8 +70,8 @@ def bit(value, name):
 def sport_identity(spec, baseline, creating):
     """Check supplied observations without inferring sport from opaque numeric IDs.
 
-    An absent observation still permits an offline draft; it cannot certify a
-    write. Contradictory observations block request generation altogether.
+    A scoped, evidenced metadata exception can tolerate a known readback bug.
+    It cannot change the selected module, authorize writes or certify execution.
     """
     expected = spec['event']['sport']
     require(expected in SPORT_LABELS, 'Use an explicit supported event.sport')
@@ -80,9 +80,11 @@ def sport_identity(spec, baseline, creating):
     if observed.get('SSID'):
         require(observed['SSID'] == spec['event']['id'], 'Sport identity event baseline belongs to a different event')
     label = observed.get('QSLXMC')
-    if label:
-        require(label == SPORT_LABELS[expected], 'Sport identity conflict in baseline QSLXMC; verify the current module before writing')
     evidence = spec.get('sport_identity')
+    label_conflict = bool(label and label != SPORT_LABELS[expected])
+    exception = evidence.get('metadata_exception') if isinstance(evidence, dict) else None
+    if label_conflict:
+        require(exception is not None, 'Sport identity conflict in baseline QSLXMC; verify the current module before writing')
     if evidence is None:
         return {'status': 'unverified', 'write_blocked': True,
                 'reason': 'Refresh current-page module and sport options before executing any request'}
@@ -104,8 +106,29 @@ def sport_identity(spec, baseline, creating):
     require(len(matches) == 1 and matches[0].get('sport') == expected and
             matches[0].get('label') == SPORT_LABELS[expected], 'Sport identity conflict in current-page selected option')
     target = spec['operations'][0].get('fields', {}) if creating else observed
-    require(isinstance(target.get('QSLXID'), str) and target['QSLXID'] == selected,
-            'Target QSLXID differs from current-page verified selection')
+    code_conflict = not isinstance(target.get('QSLXID'), str) or target['QSLXID'] != selected
+    if exception is not None:
+        require(not creating and (label_conflict or code_conflict), 'Metadata exception requires an existing event with an observed discrepancy')
+        require(isinstance(exception, dict) and exception.get('user_authorized') is True,
+                'Metadata exception requires explicit user acceptance')
+        require(exception.get('event_id') == spec['event']['id'], 'Metadata exception belongs to a different event')
+        require(exception.get('observed') == {k: observed.get(k) for k in ('QSLXID', 'QSLXMC')},
+                'Metadata discrepancy changed; inspect it again')
+        require(isinstance(observed.get('QSLXID'), str) and observed['QSLXID'], 'Missing sport metadata cannot be waived')
+        client_hash = evidence.get('client_sha256')
+        require(isinstance(client_hash, str) and re.fullmatch(r'[a-f0-9]{64}', client_hash) and
+                exception.get('client_sha256') == client_hash, 'Metadata exception requires the same observed client version')
+        verified = exception.get('verified_operations')
+        require(isinstance(verified, list) and verified and all(isinstance(k, str) and k in OPERATIONS for k in verified),
+                'Metadata exception needs specifically verified operations')
+        require({o['kind'] for o in spec['operations']} <= set(verified), 'Requested operation has not been verified under this metadata exception')
+        text(exception.get('reason'), 'metadata_exception.reason')
+        text(exception.get('evidence_reference'), 'metadata_exception.evidence_reference')
+        return {'status': 'accepted_metadata_exception', 'write_blocked': False,
+                'exception': deepcopy(exception), 'evidence_sha256': sha256(stable(evidence).encode()).hexdigest(),
+                'captured_at': evidence['captured_at'], 'requires_live_recheck': True,
+                'scope_note': 'Only the listed operations on this event; preserve raw metadata and verify functional readback.'}
+    require(not code_conflict, 'Target QSLXID differs from current-page verified selection')
     return {'status': 'observed_consistent', 'write_blocked': False,
             'evidence_sha256': sha256(stable(evidence).encode()).hexdigest(),
             'captured_at': evidence['captured_at'], 'requires_live_recheck': True}
@@ -399,8 +422,14 @@ def validate_packet(path):
     require(packet.get('schema') == 'ptty.publication-packet.v1' and packet.get('mode') == 'offline_plan', 'Not an offline publication packet')
     require(packet.get('business_writes') == 0 and packet.get('live_execution_verified') is False, 'Packet is a plan, not proof of execution')
     identity = packet.get('sport_identity')
-    require(isinstance(identity, dict) and identity.get('status') in ('unverified', 'observed_consistent'), 'Sport identity gate missing; rebuild the packet')
+    require(isinstance(identity, dict) and identity.get('status') in ('unverified', 'observed_consistent', 'accepted_metadata_exception'), 'Sport identity gate missing; rebuild the packet')
     require(identity.get('write_blocked') is (identity['status'] == 'unverified'), 'Sport identity gate is inconsistent')
+    if identity['status'] == 'accepted_metadata_exception':
+        exception = identity.get('exception', {})
+        require(exception.get('user_authorized') is True and exception.get('event_id') == packet.get('event', {}).get('id'),
+                'Invalid metadata exception binding')
+        require({a['kind'] for a in packet.get('actions', [])} <= set(exception.get('verified_operations', [])),
+                'Packet operations exceed metadata exception')
     require(packet.get('packet_sha256') == sha256(stable({k: v for k, v in packet.items() if k != 'packet_sha256'}).encode()).hexdigest(), 'Packet content hash mismatch')
     for f in packet['files']:
         raw = file_at(path.parent, f['path']).read_bytes()

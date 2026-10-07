@@ -87,6 +87,8 @@
 
 优先查本赛事指定协会的官方文件。国际规则核验入口：[BWF](https://corporate.bwfbadminton.com/statutes/)、[ITTF](https://www.ittf.com/handbook/)、[ITF](https://www.itftennis.com/en/about-us/governance/rules-and-regulations/)。引用时记录文件名称、版本、生效日、条款或页码和链接；打不开或无法确认时明确待核验，不编造“最新规则”。
 
+羽毛球先检索 [专用知识库](badminton-rules.md)，同时核对本场日期、采用协会及专项办法。不要用2022中国羽协简易版充当2025规则书，不把已公布的未来计分制提前套入规程；规则解释与本场自定的年龄组、让分、开赛门槛分开表述。
+
 ## 交付前重点检查
 
 - 名称、年份、日期与星期、场馆在正文和附件一致；删除上一届、上一场赛事遗留信息。

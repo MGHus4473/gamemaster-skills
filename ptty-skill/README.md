@@ -9,6 +9,9 @@
 | 任务 | 当前实现 |
 | --- | --- |
 | 赛事、报名、方案、名单、抽签与编排 | 当前页面操作流程及接口合同；核对赛事和版本后操作与回读 |
+| 操作定位与影响分析 | 31个功能域、109类操作的离线检索和前置状态预检；区分改名/替补、调组/方案调整、调场/重建 |
+| 任务范围与失败恢复 | 动作计划范围校验、三份快照比较、未生效行定位及哈希日志；工具不自动重试或执行 |
+| 签到、控场、团体名单与成绩更正 | 对象与状态说明、下游晋级复核；通知、权限及财务单独识别范围 |
 | 查询与报表下载 | `ptty_readonly.mjs`：白名单只读工具，使用已有浏览器 CDP 会话 |
 | 创建、图片、规程与通知 | 页面流程、字段规范；`publication_packet.py` 离线整理内容、资产与请求模板 |
 | 秩序册、节目单与小节发布 | 区分项目可见性、小节分配、手机/裁判/出场名单各端开关，逐项回读 |
@@ -40,6 +43,11 @@ Python 3.10+；依赖列表见 [requirements.txt](requirements.txt)。表格适�
 
 ```bash
 python scripts/validate_handoff.py 交接目录/handoff.json
+python scripts/operation_catalog.py search "调组"
+python scripts/operation_catalog.py show live.score
+python scripts/operation_catalog.py preflight 操作预检.json
+python scripts/task_contract.py 任务合同.json
+python scripts/workflow_state.py 恢复输入.json --out 新比较结果.json --journal 操作回执.jsonl
 python scripts/publication_packet.py prepare 发布说明.json 新发布包目录
 python scripts/publication_packet.py validate 新发布包目录/publication-packet.json
 node scripts/ptty_readonly.mjs --session 会话.json --event SS目标ID --action snapshot --out 快照.json
@@ -51,7 +59,11 @@ python scripts/qr_export.py --url-file 观众入口.txt --out 观众二维码.pn
 ## 回读与边界
 
 - 写入前核对目标赛事、运动模块、模板和最新完整设置，之后比较前后差异。历史空值与默认值分别保留，避免发布正文时意外改动报名模式或其他开关。
-- 新建赛事已有创建表单合同和本地校验，但尚未完成真实 `ADD` 创建验收；其他实际验证过的操作以 [创建与发布](references/publication.md) 为准。平台接口变化后按当前页面重新核验。
+- 操作目录基于官方客户端静态实现，预检不连接平台、不授予权限、不自动执行；页面合同和当前角色仍需核验。创建向导存在模拟数据，比赛检查使用随机结果，均不用于真实创建或验收，见[操作目录](references/operation-map.md)。
+- 2026-10-07隔离合成赛已验证4人单打淘汰流程：方案/名单、场次、离线抽签和编排导入、小节发布、录分晋级、7类报表与3种二维码下载。运动元数据异常按用户接受的限定范围保留；未做实际微信扫码，不能推广到循环、团体或其他运动模块。见[恢复验收](references/recovery-and-testing.md)、[运动身份](references/website.md)。
+- 2026-10-08另完成21场两阶段单打及含轮空双打合成赛：独立抽签/编排导入、两小节、循环晋级和成绩导出核对通过。修复双打姓名显示差异、七行场次卡及多项目重复表头适配；该样例没有组内同分，未覆盖线上替补、团体或其他运动模块。
+- 随后对单局`ZC`配置验证三人同胜次的全组统计范围和两人同胜次的相互胜负分支，并恢复原成绩。
+- 当前`newSaveUpdateRyxx`已验证单打局部替补与男双两成员位分别替补，报名项、种子和另一成员保持，候选复用现有兼项身份；男双第一位替补后的新比分、晋级及夺冠与独立复算一致。编辑会使名单锁定失效；换回原人员时ID可能保留或重新生成，须核对映射。旧换人接口仍失败，其他模式的验证范围见[现场操作](references/live-operations.md)。
 - 当前场次表与编排导入依赖已有真实 `CCH`。本地算法可以独立生成对阵和 ID，但没有已验证的完整新增场次入口时，不能宣称已在平台独立创建，也不能替换为平台自动生成而不说明。
 - 四种运动的本地支持不等于跑兔各运动模块均已适配。赛事名称与模块元数据冲突时，先核实当前选择与枚举，不凭名称猜造运动代码。
 - 客户端报表开关展示系统已有数据。未证实通用 Word/PDF 附件上传入口；自行排版的秩序册不等于系统秩序册，不能只开开关就声称已上传附件。

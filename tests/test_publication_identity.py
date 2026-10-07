@@ -36,6 +36,21 @@ def source():
     }
 
 
+def metadata_exception_source():
+    spec = source()
+    spec['baseline']['event'].update(QSLXID='LEGACY-CODE', QSLXMC='乒乓球')
+    evidence = spec['sport_identity']
+    evidence['client_sha256'] = 'a' * 64
+    evidence['metadata_exception'] = {
+        'event_id': spec['event']['id'], 'user_authorized': True,
+        'observed': {'QSLXID': 'LEGACY-CODE', 'QSLXMC': '乒乓球'},
+        'client_sha256': 'a' * 64, 'verified_operations': ['materials_all'],
+        'reason': 'Synthetic metadata defect; current module and functional readback verified',
+        'evidence_reference': 'synthetic-test/functional-readback.json',
+    }
+    return spec
+
+
 class PublicationIdentityTests(unittest.TestCase):
     def packet(self, spec):
         with tempfile.TemporaryDirectory() as root:
@@ -117,6 +132,51 @@ class PublicationIdentityTests(unittest.TestCase):
             result = publication.validate_packet(path)
         self.assertTrue(result['valid'])
         self.assertTrue(result['sport_write_blocked'])
+
+    def test_scoped_metadata_exception_retains_original_observations(self):
+        spec = metadata_exception_source(); before = deepcopy(spec)
+        packet = self.packet(spec)
+        self.assertEqual(spec, before)
+        self.assertEqual(packet['sport_identity']['status'], 'accepted_metadata_exception')
+        self.assertFalse(packet['sport_identity']['write_blocked'])
+        self.assertTrue(packet['sport_identity']['requires_live_recheck'])
+        self.assertEqual(packet['sport_identity']['exception']['observed']['QSLXID'], 'LEGACY-CODE')
+        self.assertFalse(packet['live_execution_verified'])
+
+    def test_metadata_exception_does_not_cover_another_event_or_operation(self):
+        for key, value in [('event_id', 'SYNTHETIC-OTHER'), ('verified_operations', ['editor'])]:
+            spec = metadata_exception_source(); spec['sport_identity']['metadata_exception'][key] = value
+            with self.assertRaises(ValueError): self.packet(spec)
+
+    def test_metadata_exception_does_not_cover_wrong_module(self):
+        for key, value in [('module_sport', 'table_tennis'), ('selected_id', 'LEGACY-CODE')]:
+            spec = metadata_exception_source(); spec['sport_identity'][key] = value
+            with self.assertRaisesRegex(ValueError, 'Sport identity conflict'): self.packet(spec)
+
+    def test_metadata_exception_requires_acceptance_and_evidence(self):
+        for key, value in [('user_authorized', False), ('reason', ''), ('evidence_reference', ''), ('verified_operations', [])]:
+            spec = metadata_exception_source(); spec['sport_identity']['metadata_exception'][key] = value
+            with self.assertRaises(ValueError): self.packet(spec)
+
+    def test_metadata_exception_expires_when_client_or_discrepancy_changes(self):
+        spec = metadata_exception_source(); spec['sport_identity']['client_sha256'] = 'b' * 64
+        with self.assertRaisesRegex(ValueError, 'client version'): self.packet(spec)
+        spec = metadata_exception_source(); spec['baseline']['event']['QSLXID'] = 'NEW-CODE'
+        with self.assertRaisesRegex(ValueError, 'discrepancy changed'): self.packet(spec)
+
+    def test_metadata_exception_cannot_waive_creation_identity(self):
+        spec = metadata_exception_source(); spec['event']['id'] = ''; spec['baseline'] = {}
+        spec['operations'] = [{'kind': 'create_event', 'fields': {'QSLXID': 'OTHER'}}]
+        with self.assertRaisesRegex(ValueError, 'existing event'): self.packet(spec)
+
+    def test_metadata_exception_packet_round_trip(self):
+        with tempfile.TemporaryDirectory() as root:
+            packet, _ = publication.compile_packet(metadata_exception_source(), root)
+            path = Path(root) / 'packet.json'; path.write_text(json.dumps(packet), encoding='utf-8')
+            result = publication.validate_packet(path)
+            self.assertTrue(result['valid'])
+            self.assertFalse(result['sport_write_blocked'])
+            self.assertEqual(result['sport_identity_status'], 'accepted_metadata_exception')
 
     def test_editor_rejects_encoded_and_fragment_private_urls_without_echoing_values(self):
         for url in ('https://example.invalid/?%74oken=synthetic-private-value',

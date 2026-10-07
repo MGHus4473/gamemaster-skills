@@ -1,4 +1,4 @@
 interface:
   display_name: "Gamemaster 离线赛事"
-  short_description: "离线制作四种球类赛事的规程、名单、签表、赛程与成绩文件"
-  default_prompt: "请使用 $gamemaster-skill 根据现有规程和报名材料制作所需赛事文件，先补齐影响结果的参数，再核对身份、抽签、编排依赖、休息和成绩；成果保存在赛事工作区。"
+  short_description: "离线制作四种球类赛事文件，并按BWF与中国羽协已核验资料解读羽毛球规则"
+  default_prompt: "请使用 $gamemaster-skill 制作所需赛事文件或解答规则问题；按任务补齐关键参数，羽毛球规则注明适用版本、条款来源及核验范围，成果保存在赛事工作区。"

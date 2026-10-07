@@ -1,0 +1,2274 @@
+{
+  "schema_version": 1,
+  "observation": {
+    "date": "2026-10-07",
+    "surface": "https://www.ptty.com.cn/",
+    "asset": "/static/js/app.1073f5c6401c322ed993.js",
+    "sha256": "0d02886aec1172d074a4b719be4a14c1fa5b0da36dc0cf21735e34d769e2a5ea",
+    "scope": "羽毛球管理客户端静态实现；另已只读观察当前账户16个业务子页面及报名8个标签。页面观察不等于所有动作或接口实写验收"
+  },
+  "groups": [
+    {
+      "id": "events",
+      "title": "赛事管理",
+      "route": "/index",
+      "component": "Index",
+      "op": "ssGl"
+    },
+    {
+      "id": "signup",
+      "title": "报名设置",
+      "route": "/trialReportIndex",
+      "component": "ReportGhCom",
+      "op": "bmGl"
+    },
+    {
+      "id": "entries",
+      "title": "报名数据",
+      "route": "/trialReportIndex",
+      "component": "ReportXmxxCom / ReportRyxxCom / ReportDwxxCom / ReportXmxxTeamInfoCom",
+      "op": "rmdDataBaseGl"
+    },
+    {
+      "id": "plan",
+      "title": "竞赛方案",
+      "route": "/trialGhIndex",
+      "component": "TrialGhIndex",
+      "op": "ssghGl"
+    },
+    {
+      "id": "roster",
+      "title": "参赛名单",
+      "route": "/trialRmdGlIndex",
+      "component": "TrialRmdGlIndex",
+      "op": "rmdGl"
+    },
+    {
+      "id": "matches",
+      "title": "赛程管理",
+      "route": "/trialScGlIndex",
+      "component": "TrialSsBpIndex",
+      "op": "scGl"
+    },
+    {
+      "id": "draw",
+      "title": "抽签管理",
+      "route": "/trialCqIndex",
+      "component": "TrialCqIndex / SeedCqCom / CqCom",
+      "op": "cqGl"
+    },
+    {
+      "id": "schedule",
+      "title": "赛事编排",
+      "route": "/trialSsBpIndex",
+      "component": "TrialSsBpIndex / ClcTableCom",
+      "op": "bpGl"
+    },
+    {
+      "id": "control",
+      "title": "比赛控制",
+      "route": "/trialScreenSet",
+      "component": "TrialScreenSet",
+      "op": "trialScreenSetGl"
+    },
+    {
+      "id": "live",
+      "title": "控场管理",
+      "route": "/trialKongChangGlIndex",
+      "component": "TrialKongChangGlIndex",
+      "op": "kcGl / markGl"
+    },
+    {
+      "id": "checkin",
+      "title": "签到",
+      "route": "/qdGlIndex",
+      "component": "QdGlIndex",
+      "op": "rmdDataBaseGl"
+    },
+    {
+      "id": "publish",
+      "title": "客户端设置",
+      "route": "/trialClientSet",
+      "component": "TrialClientSet",
+      "op": "clientSet"
+    },
+    {
+      "id": "reports",
+      "title": "出单管理",
+      "route": "/trialCdGlIndex",
+      "component": "TrialCdGlIndex",
+      "op": "cdGl"
+    },
+    {
+      "id": "permissions",
+      "title": "赛事人员权限",
+      "route": "/trialSsidCpyGlIndex",
+      "component": "trialSsidCpyGlIndex",
+      "op": "qxGl"
+    },
+    {
+      "id": "referees",
+      "title": "全局裁判库",
+      "route": "/trialCpyGlIndex",
+      "component": "TrialCpyGlIndex",
+      "op": "cpyGl"
+    },
+    {
+      "id": "accounts",
+      "title": "子账号",
+      "route": "/childZhGlIndex",
+      "component": "ChildZhGlIndex",
+      "op": "qxGl"
+    },
+    {
+      "id": "finance",
+      "title": "财务管理",
+      "route": "/trialCwGlIndex",
+      "component": "TrialCpyGlIndex",
+      "op": "cwGl"
+    },
+    {
+      "id": "transactions",
+      "title": "报名交易",
+      "route": "/trialReportIndex",
+      "component": "ReportJyjlCom / ReportAllJyjlCom",
+      "op": "rmdDataBaseGl / ssJs"
+    },
+    {
+      "id": "settlement",
+      "title": "微信分账",
+      "route": "/trialPtFzIndex",
+      "component": "见当前页面",
+      "op": "ptFzGl"
+    },
+    {
+      "id": "merchant",
+      "title": "银行商户",
+      "route": "/trialJsrGlIndex",
+      "component": "TrialJsrGlIndex",
+      "op": "ptFzGl"
+    },
+    {
+      "id": "ai",
+      "title": "AI编排",
+      "route": "/aiSchedulePage",
+      "component": "AiSchedulePage / AiScheduleDialog",
+      "op": "aiAutoBpGl"
+    },
+    {
+      "id": "knowledge",
+      "title": "AI知识库",
+      "route": "/trialAiGlIndex",
+      "component": "TrialAiGlIndex",
+      "op": "aiKnowledgeGl"
+    },
+    {
+      "id": "demo",
+      "title": "演示与空壳入口",
+      "route": "/trialStepGlIndex",
+      "component": "TrialStepGlIndex",
+      "op": "无真实业务合同"
+    },
+    {
+      "id": "checkdesk",
+      "title": "检录显示屏",
+      "route": "/trialScreenJlIndex",
+      "component": "按当前检录样式确认",
+      "op": "按当前检录页合同"
+    },
+    {
+      "id": "display",
+      "title": "赛事显示屏",
+      "route": "/trialScreenIndex",
+      "component": "按当前大屏样式确认",
+      "op": "按当前显示页合同"
+    },
+    {
+      "id": "certificate",
+      "title": "证书坐标工具",
+      "route": "/trialCerGlIndex",
+      "component": "trialCerGlIndex",
+      "op": "本地绘图工具"
+    },
+    {
+      "id": "users",
+      "title": "用户管理",
+      "route": "/userManagementIndex",
+      "component": "UserManagementIndex",
+      "op": "userManagement"
+    },
+    {
+      "id": "shop",
+      "title": "充值中心",
+      "route": "/trialShopIndex",
+      "component": "TrialShopIndex",
+      "op": "payGl"
+    },
+    {
+      "id": "stats",
+      "title": "赛事报名统计",
+      "route": "/trialBmjlGlIndex",
+      "component": "AllXmZbxxCom / ReportAllJyjlCom",
+      "op": "ssJs"
+    },
+    {
+      "id": "assistant",
+      "title": "AI聊天助手",
+      "route": "/chatBotIndex",
+      "component": "ChatBotIndex",
+      "op": "ssGl及当前聊天服务"
+    },
+    {
+      "id": "membership",
+      "title": "会员中心",
+      "route": "/trialCenterIndex",
+      "component": "TrialShopCenterIndex",
+      "op": "payGl"
+    }
+  ],
+  "operations": [
+    {
+      "id": "matches.export_renumber",
+      "title": "导出所有场次并更新赛号",
+      "kind": "write",
+      "methods": ["UploadCurrCom/downSubmitHandler", "POST /trialExcelMb (op=scGl)"],
+      "requires": ["target_identity", "role_access", "renumber_scope"],
+      "impacts": ["matches", "draw", "schedule", "results", "reports"],
+      "acceptance": "页面明确标注更新赛号；核对赛号与CCH等引用实际改变范围，不作为普通只读导出。仅需查看现有场次时使用出单管理场序表",
+      "evidence": "static"
+    },
+    {
+      "id": "events.list",
+      "title": "查询筛选赛事",
+      "kind": "read",
+      "methods": [
+        "getSsList"
+      ],
+      "requires": [
+        "role_access"
+      ],
+      "impacts": [],
+      "acceptance": "赛事ID名称运动和分页总数",
+      "evidence": "static"
+    },
+    {
+      "id": "events.create",
+      "title": "新建赛事",
+      "kind": "write",
+      "methods": [
+        "checkCtrateSs",
+        "insertOrUpdateOrDeleteSs"
+      ],
+      "requires": [
+        "sport_identity",
+        "creation_fields"
+      ],
+      "impacts": [
+        "event"
+      ],
+      "acceptance": "新ID与完整表单回读",
+      "evidence": "static"
+    },
+    {
+      "id": "events.edit",
+      "title": "编辑赛事图片基础信息",
+      "kind": "write",
+      "methods": [
+        "insertOrUpdateOrDeleteSs"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access"
+      ],
+      "impacts": [
+        "event",
+        "publication"
+      ],
+      "acceptance": "仅目标字段改变",
+      "evidence": "static"
+    },
+    {
+      "id": "events.copy",
+      "title": "复制赛事",
+      "kind": "write",
+      "methods": [
+        "copyTrial"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "copy_scope"
+      ],
+      "impacts": [
+        "event"
+      ],
+      "acceptance": "新旧ID及实际复制范围",
+      "evidence": "static"
+    },
+    {
+      "id": "events.delete",
+      "title": "删除赛事",
+      "kind": "write",
+      "methods": [
+        "insertOrUpdateOrDeleteSs"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "destructive_scope"
+      ],
+      "impacts": [
+        "event",
+        "all_dependents"
+      ],
+      "acceptance": "目标消失且其它赛事保留",
+      "evidence": "static"
+    },
+    {
+      "id": "events.initialize",
+      "title": "初始化试用数据",
+      "kind": "write",
+      "methods": [
+        "syGl/initSyData"
+      ],
+      "requires": [
+        "role_access",
+        "destructive_scope"
+      ],
+      "impacts": [
+        "event"
+      ],
+      "acceptance": "真实数据变化；非只读检查",
+      "evidence": "static"
+    },
+    {
+      "id": "signup.read",
+      "title": "读取报名组别设置",
+      "kind": "read",
+      "methods": [
+        "getBmGlList",
+        "getXmList"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access"
+      ],
+      "impacts": [],
+      "acceptance": "组别资格费用单位和报名上限",
+      "evidence": "static"
+    },
+    {
+      "id": "signup.groups",
+      "title": "增改删报名组别",
+      "kind": "write",
+      "methods": [
+        "addOrEditorOrDelHandler"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "group_mapping"
+      ],
+      "impacts": [
+        "registration",
+        "plan",
+        "roster"
+      ],
+      "acceptance": "组别与在册报名项去向",
+      "evidence": "static"
+    },
+    {
+      "id": "signup.settings",
+      "title": "报名设置批量全局限项性别年龄缴费",
+      "kind": "write",
+      "methods": [
+        "saveBmSet",
+        "saveQjBmSet"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "signup_policy"
+      ],
+      "impacts": [
+        "registration",
+        "publication"
+      ],
+      "acceptance": "各组和全局完整值",
+      "evidence": "static"
+    },
+    {
+      "id": "signup.lists",
+      "title": "报名白名单黑名单",
+      "kind": "write",
+      "methods": [
+        "editorBmdDataHander",
+        "editorHmdDataHander"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "eligibility_policy"
+      ],
+      "impacts": [
+        "registration"
+      ],
+      "acceptance": "限定人员与准入效果",
+      "evidence": "static"
+    },
+    {
+      "id": "signup.payment_channel",
+      "title": "设置报名收款渠道",
+      "kind": "financial",
+      "methods": [
+        "getBankList",
+        "setBankBh"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "payment_scope"
+      ],
+      "impacts": [
+        "payments"
+      ],
+      "acceptance": "渠道归属与绑定结果",
+      "evidence": "static"
+    },
+    {
+      "id": "signup.fee_rules",
+      "title": "动态收费标准自定义控件报名服务",
+      "kind": "write",
+      "methods": [
+        "getSpecList",
+        "delDtSfbz",
+        "getZdyKj",
+        "saveZbServerHandler"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "signup_policy"
+      ],
+      "impacts": [
+        "registration",
+        "payments"
+      ],
+      "acceptance": "实际字段模式收费单位与配置",
+      "evidence": "static"
+    },
+    {
+      "id": "signup.discount_review",
+      "title": "会员优惠申请审核",
+      "kind": "financial",
+      "methods": [
+        "getHySqRecord",
+        "editorHySqRecord"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "payment_scope"
+      ],
+      "impacts": [
+        "payments",
+        "registration"
+      ],
+      "acceptance": "申请状态和对应优惠",
+      "evidence": "static"
+    },
+    {
+      "id": "entries.read",
+      "title": "报名人员单位项目团体概况",
+      "kind": "read",
+      "methods": [
+        "getRyList",
+        "getDwList",
+        "getXmRyxxList",
+        "getXmRyxxSum",
+        "bmgkHandler"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access"
+      ],
+      "impacts": [],
+      "acceptance": "有效待支付退赛分别统计",
+      "evidence": "static"
+    },
+    {
+      "id": "entries.person",
+      "title": "全局报名人员编辑姓名身份证附件",
+      "kind": "write",
+      "methods": [
+        "addOrEditorOrDelRy",
+        "getEditorRyInfo"
+      ],
+      "requires": [
+        "person_scope",
+        "role_access"
+      ],
+      "impacts": [
+        "registration",
+        "roster"
+      ],
+      "acceptance": "相关所有项目姓名资格映射",
+      "evidence": "static"
+    },
+    {
+      "id": "entries.unit",
+      "title": "报名单位及教练信息维护",
+      "kind": "write",
+      "methods": [
+        "页面ReportDwxxCom合同"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "unit_scope"
+      ],
+      "impacts": [
+        "registration",
+        "roster"
+      ],
+      "acceptance": "单位与归属不误合并",
+      "evidence": "static"
+    },
+    {
+      "id": "entries.add",
+      "title": "后台添加报名单打双打团体",
+      "kind": "write",
+      "methods": [
+        "adminBmRyOrSzTz"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "signup_policy"
+      ],
+      "impacts": [
+        "registration",
+        "payments",
+        "roster"
+      ],
+      "acceptance": "搭档队员人数和付款状态",
+      "evidence": "static"
+    },
+    {
+      "id": "entries.transfer",
+      "title": "编辑调组并组报名转项",
+      "kind": "write",
+      "methods": [
+        "adminBmRyOrSzTz"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "group_mapping"
+      ],
+      "impacts": [
+        "registration",
+        "plan",
+        "roster",
+        "publication"
+      ],
+      "acceptance": "每条源报名映射和整队成员",
+      "evidence": "static"
+    },
+    {
+      "id": "entries.withdraw",
+      "title": "取消报名删除报名项目",
+      "kind": "write",
+      "methods": [
+        "anXmDleteRy"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "withdrawal_scope"
+      ],
+      "impacts": [
+        "registration",
+        "roster",
+        "payments"
+      ],
+      "acceptance": "报名删除与退款分开核对",
+      "evidence": "static"
+    },
+    {
+      "id": "entries.team_members",
+      "title": "报名团体成员增改删调组",
+      "kind": "write",
+      "methods": [
+        "getTeamXmList",
+        "adminBmRyOrSzTz",
+        "anXmDleteRy"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "team_scope"
+      ],
+      "impacts": [
+        "registration",
+        "roster"
+      ],
+      "acceptance": "队员资格数量和全队流向",
+      "evidence": "static"
+    },
+    {
+      "id": "plan.read",
+      "title": "读取竞赛方案阶段计分排名",
+      "kind": "read",
+      "methods": [
+        "getMainList",
+        "queryOrEditorCcMdMs"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access"
+      ],
+      "impacts": [],
+      "acceptance": "只用查询模式和全量阶段",
+      "evidence": "static"
+    },
+    {
+      "id": "plan.edit",
+      "title": "方案添加修改删除批改二段方案",
+      "kind": "write",
+      "methods": [
+        "insertOrUptOrDel"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "plan_confirmed"
+      ],
+      "impacts": [
+        "plan",
+        "matches",
+        "draw",
+        "schedule",
+        "sections"
+      ],
+      "acceptance": "各阶段人数晋级及项目ID",
+      "evidence": "static"
+    },
+    {
+      "id": "plan.count_sync",
+      "title": "同步报名人数到竞赛方案",
+      "kind": "write",
+      "methods": [
+        "initBmrsHandler"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "group_mapping"
+      ],
+      "impacts": [
+        "plan",
+        "matches"
+      ],
+      "acceptance": "目标组人数单位并组预留区别",
+      "evidence": "static"
+    },
+    {
+      "id": "plan.ranking",
+      "title": "名次排序模式设置",
+      "kind": "write",
+      "methods": [
+        "updatePmms"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "ranking_policy"
+      ],
+      "impacts": [
+        "results",
+        "reports"
+      ],
+      "acceptance": "PMMS和规程排序依据",
+      "evidence": "static"
+    },
+    {
+      "id": "plan.team_settings",
+      "title": "团体场数特殊团体名单拉取",
+      "kind": "write",
+      "methods": [
+        "queryOrEditorCcMdMs",
+        "saveTsTeamSet"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "team_scope"
+      ],
+      "impacts": [
+        "plan",
+        "matches",
+        "lineups"
+      ],
+      "acceptance": "读取与编辑模式区分",
+      "evidence": "static"
+    },
+    {
+      "id": "plan.generate",
+      "title": "从竞赛方案生成并覆盖赛程",
+      "kind": "write",
+      "methods": [
+        "scGl/czSc (type=create)"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "plan_confirmed",
+        "roster_complete",
+        "generation_scope"
+      ],
+      "impacts": [
+        "matches",
+        "draw",
+        "schedule",
+        "sections",
+        "results"
+      ],
+      "acceptance": "页面提示清空赛程和编排；核对选中项目及全部受影响CCH",
+      "evidence": "static"
+    },
+    {
+      "id": "roster.read",
+      "title": "查看参赛名单搭档队员种子",
+      "kind": "read",
+      "methods": [
+        "mainLoadData",
+        "getTzrmd",
+        "getCyTeamList"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access"
+      ],
+      "impacts": [],
+      "acceptance": "人对队数完整对应项目",
+      "evidence": "static"
+    },
+    {
+      "id": "roster.edit",
+      "title": "添加修改人员、替补与搭档（需核验当前入口）",
+      "kind": "write",
+      "methods": [
+        "newSaveUpdateRyxx",
+        "updateTeamDwInfo"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "roster_edit_allowed",
+        "replacement_scope",
+        "roster_current_entry_verified",
+        "downstream_reviewed"
+      ],
+      "impacts": [
+        "roster",
+        "draw",
+        "schedule",
+        "results",
+        "roster_lock",
+        "identity_mapping"
+      ],
+      "acceptance": "当前newSaveUpdateRyxx已实测单打替补与男双两成员位分别替补：保留XMNM、另一成员及种子，核对候选ID与全部兼项；检查锁定及恢复ID，新赛果绑定完整成员并回读晋级。旧updateRyxx失败；其他范围见现场操作",
+      "evidence": "static"
+    },
+    {
+      "id": "roster.team",
+      "title": "团体队员参赛名单维护",
+      "kind": "write",
+      "methods": [
+        "TEAMCYXX",
+        "updateOrAddCyInfo"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "roster_edit_allowed",
+        "team_scope"
+      ],
+      "impacts": [
+        "roster",
+        "lineups",
+        "schedule"
+      ],
+      "acceptance": "全队成员与场次资格",
+      "evidence": "static"
+    },
+    {
+      "id": "roster.delete",
+      "title": "删除参赛名单",
+      "kind": "write",
+      "methods": [
+        "deleteRmd"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "roster_edit_allowed",
+        "destructive_scope"
+      ],
+      "impacts": [
+        "roster",
+        "draw",
+        "schedule"
+      ],
+      "acceptance": "报名来源签位与删除范围",
+      "evidence": "static"
+    },
+    {
+      "id": "roster.quote",
+      "title": "查看锁名单扣费报价",
+      "kind": "read",
+      "methods": [
+        "getKkJeHandler"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access"
+      ],
+      "impacts": [],
+      "acceptance": "当前锁定状态与金额",
+      "evidence": "static"
+    },
+    {
+      "id": "roster.lock",
+      "title": "锁定名单扣费",
+      "kind": "financial",
+      "methods": [
+        "sdRmdHandler"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "roster_complete",
+        "fee_authorized"
+      ],
+      "impacts": [
+        "roster",
+        "matches",
+        "draw"
+      ],
+      "acceptance": "锁定状态和实际扣费",
+      "evidence": "static"
+    },
+    {
+      "id": "matches.read",
+      "title": "赛程场次轮次分组对位表",
+      "kind": "read",
+      "methods": [
+        "mainLoadData",
+        "getDwInfo",
+        "getFzCount"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access"
+      ],
+      "impacts": [],
+      "acceptance": "场数轮空依赖完整性",
+      "evidence": "static"
+    },
+    {
+      "id": "matches.generate",
+      "title": "生成比赛场次",
+      "kind": "write",
+      "methods": [
+        "initScInfo"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "plan_confirmed",
+        "roster_complete",
+        "generation_scope"
+      ],
+      "impacts": [
+        "matches",
+        "draw",
+        "schedule",
+        "sections"
+      ],
+      "acceptance": "CCH结构与对阵来源",
+      "evidence": "static"
+    },
+    {
+      "id": "matches.groups",
+      "title": "调整分组人数容量",
+      "kind": "write",
+      "methods": [
+        "tzFzCount"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "capacity_policy"
+      ],
+      "impacts": [
+        "matches",
+        "draw",
+        "schedule"
+      ],
+      "acceptance": "抽签前后模式和容量一致",
+      "evidence": "static"
+    },
+    {
+      "id": "matches.reset",
+      "title": "清空重置已有赛程",
+      "kind": "write",
+      "methods": [
+        "czSc"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "destructive_scope"
+      ],
+      "impacts": [
+        "matches",
+        "draw",
+        "schedule",
+        "sections",
+        "results"
+      ],
+      "acceptance": "旧引用失效范围",
+      "evidence": "static"
+    },
+    {
+      "id": "draw.read",
+      "title": "查看签位与历史抽签方案",
+      "kind": "read",
+      "methods": [
+        "mainLoadData",
+        "getCqResult",
+        "getLsFa",
+        "getLsCqResult"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access"
+      ],
+      "impacts": [],
+      "acceptance": "当前采用方案与历史候选区分",
+      "evidence": "static"
+    },
+    {
+      "id": "draw.seeds",
+      "title": "设置种子号清除种子号",
+      "kind": "write",
+      "methods": [
+        "getRmdData",
+        "saveZzhHandler",
+        "clearZzhHandler"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "seed_policy"
+      ],
+      "impacts": [
+        "draw",
+        "schedule"
+      ],
+      "acceptance": "项目人员种子对应非仅表格签位",
+      "evidence": "static"
+    },
+    {
+      "id": "draw.candidate",
+      "title": "生成自动抽签候选方案",
+      "kind": "write",
+      "methods": [
+        "startAutoCqCheck",
+        "autoCqHandler"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "roster_locked",
+        "matches_present",
+        "draw_policy"
+      ],
+      "impacts": [
+        "draw_candidates"
+      ],
+      "acceptance": "候选生成不等于采用",
+      "evidence": "static"
+    },
+    {
+      "id": "draw.apply",
+      "title": "采用保存抽签方案",
+      "kind": "write",
+      "methods": [
+        "saveAutoCq"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "draw_candidate",
+        "draw_change_scope"
+      ],
+      "impacts": [
+        "draw",
+        "schedule"
+      ],
+      "acceptance": "实际签位首轮对阵和轮空",
+      "evidence": "static"
+    },
+    {
+      "id": "draw.manual",
+      "title": "手动拖拽调整签位",
+      "kind": "write",
+      "methods": [
+        "CqCom/wzdd"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "draw_change_scope"
+      ],
+      "impacts": [
+        "draw",
+        "schedule"
+      ],
+      "acceptance": "种子回避签位及首轮对阵",
+      "evidence": "static"
+    },
+    {
+      "id": "draw.import",
+      "title": "导入离线抽签结果",
+      "kind": "write",
+      "methods": [
+        "当前上传组件与模板"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "matches_present",
+        "handoff_valid",
+        "draw_change_scope"
+      ],
+      "impacts": [
+        "draw",
+        "schedule"
+      ],
+      "acceptance": "正常导入与强制开赛后模式",
+      "evidence": "static"
+    },
+    {
+      "id": "draw.delete",
+      "title": "删除当前签位或历史方案",
+      "kind": "write",
+      "methods": [
+        "deleteCq",
+        "removeLsfa"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "destructive_scope"
+      ],
+      "impacts": [
+        "draw",
+        "draw_candidates",
+        "schedule"
+      ],
+      "acceptance": "当前与历史删除对象分清",
+      "evidence": "static"
+    },
+    {
+      "id": "schedule.read",
+      "title": "查看编排场序场地未编排",
+      "kind": "read",
+      "methods": [
+        "mainLoadData",
+        "getCxList",
+        "getBsAnPaiList",
+        "getGroupCcList",
+        "getKsbpList"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access"
+      ],
+      "impacts": [],
+      "acceptance": "已排未排小节与全量CCH",
+      "evidence": "static"
+    },
+    {
+      "id": "schedule.grid",
+      "title": "创建日期时段场地场序网格",
+      "kind": "write",
+      "methods": [
+        "autoCreateBpInfo",
+        "createBp",
+        "editorBpInfo"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "time_court_policy"
+      ],
+      "impacts": [
+        "schedule",
+        "sections"
+      ],
+      "acceptance": "时间窗口及午休不混成连续场序",
+      "evidence": "static"
+    },
+    {
+      "id": "schedule.arrange",
+      "title": "自动编排按组按轮拖拽自定义编排",
+      "kind": "write",
+      "methods": [
+        "saveAutoBp",
+        "saveZdyBp",
+        "setBsAnPai",
+        "setLchBpHander",
+        "setZbBpSx"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "matches_present",
+        "draw_complete",
+        "scheduling_valid"
+      ],
+      "impacts": [
+        "schedule",
+        "sections",
+        "reports"
+      ],
+      "acceptance": "硬约束和前移优化指标全量核对",
+      "evidence": "static"
+    },
+    {
+      "id": "schedule.import",
+      "title": "导入离线时间场地表",
+      "kind": "write",
+      "methods": [
+        "getZzDrBpData及当前上传合同"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "matches_present",
+        "handoff_valid",
+        "scheduling_valid"
+      ],
+      "impacts": [
+        "schedule",
+        "sections",
+        "reports"
+      ],
+      "acceptance": "CCH时间日期场地一一对应",
+      "evidence": "static"
+    },
+    {
+      "id": "schedule.move",
+      "title": "移动场次换场取消局部编排",
+      "kind": "write",
+      "methods": [
+        "setBsAnPai",
+        "cancelBp"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "matches_present",
+        "move_scope",
+        "scheduling_valid"
+      ],
+      "impacts": [
+        "schedule",
+        "sections",
+        "reports"
+      ],
+      "acceptance": "前后依赖休息和固定安排",
+      "evidence": "static"
+    },
+    {
+      "id": "schedule.clear",
+      "title": "删除编排网格清空编排重置场序",
+      "kind": "write",
+      "methods": [
+        "removeBpInfo",
+        "deleteBpInfo",
+        "czCxh"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "destructive_scope"
+      ],
+      "impacts": [
+        "schedule",
+        "sections",
+        "reports"
+      ],
+      "acceptance": "明确清网格清位置或重编号",
+      "evidence": "static"
+    },
+    {
+      "id": "schedule.sections",
+      "title": "按场序范围生成小节",
+      "kind": "write",
+      "methods": [
+        "createXj"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "schedule_complete",
+        "section_ranges"
+      ],
+      "impacts": [
+        "sections",
+        "publication"
+      ],
+      "acceptance": "所有CCH的XJ与未分节数",
+      "evidence": "static"
+    },
+    {
+      "id": "control.read",
+      "title": "读取比赛控制和小节开关",
+      "kind": "read",
+      "methods": [
+        "getXjs",
+        "getJlAutoNotifyConfig"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access"
+      ],
+      "impacts": [],
+      "acceptance": "裁判手机名单各端分别读取",
+      "evidence": "static"
+    },
+    {
+      "id": "control.sections",
+      "title": "开放关闭小节各端",
+      "kind": "write",
+      "methods": [
+        "setXjData"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "sections_present",
+        "publication_scope"
+      ],
+      "impacts": [
+        "publication"
+      ],
+      "acceptance": "自动保存后逐端实际展示",
+      "evidence": "static"
+    },
+    {
+      "id": "control.settings",
+      "title": "签名弃权模式PAD领队名单证书设置",
+      "kind": "write",
+      "methods": [
+        "setWxApp"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "control_policy"
+      ],
+      "impacts": [
+        "control",
+        "results",
+        "publication"
+      ],
+      "acceptance": "只改指定项完整回读",
+      "evidence": "static"
+    },
+    {
+      "id": "control.notify_config",
+      "title": "设置删除自动检录通知",
+      "kind": "notify",
+      "methods": [
+        "saveJlAutoNotifyConfig",
+        "deleteJlAutoNotifyConfig"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "notification_scope"
+      ],
+      "impacts": [
+        "notifications"
+      ],
+      "acceptance": "对象提前量重复和时间格式",
+      "evidence": "static"
+    },
+    {
+      "id": "control.notify_send",
+      "title": "立即检录提醒测试通知",
+      "kind": "notify",
+      "methods": [
+        "arrangement/arrangement",
+        "sendTestNotify"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "notification_scope"
+      ],
+      "impacts": [
+        "notifications"
+      ],
+      "acceptance": "真实送达范围和发送状态",
+      "evidence": "static"
+    },
+    {
+      "id": "control.qr",
+      "title": "导出赛事观众裁判小程序PAD二维码",
+      "kind": "read",
+      "methods": [
+        "trialItemGl/generateQrCode",
+        "ssGl/getCpyTwoCode",
+        "ssGl/getPadTwoCode"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access"
+      ],
+      "impacts": [],
+      "acceptance": "保持原协议用途目标不互换",
+      "evidence": "static"
+    },
+    {
+      "id": "live.read",
+      "title": "控场比赛状态比分明细团体名单呼叫",
+      "kind": "read",
+      "methods": [
+        "mainLoadData",
+        "getCdInfo",
+        "getDjMark",
+        "getFitterData",
+        "getMarkMx",
+        "getTeamCcmd",
+        "GetHjxxList"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access"
+      ],
+      "impacts": [],
+      "acceptance": "双方场次小节和进行状态",
+      "evidence": "static"
+    },
+    {
+      "id": "live.score",
+      "title": "录入更正逐局比分",
+      "kind": "write",
+      "methods": [
+        "markGl/adminUpdateMark"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "match_identity",
+        "score_policy",
+        "downstream_reviewed"
+      ],
+      "impacts": [
+        "results",
+        "advancement",
+        "reports",
+        "certificates"
+      ],
+      "acceptance": "胜負晋级排名及已开赛下游",
+      "evidence": "static"
+    },
+    {
+      "id": "live.withdraw",
+      "title": "单场弃权一弃到底取消判罚",
+      "kind": "write",
+      "methods": [
+        "当前控场状态字段及判罚合同"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "match_identity",
+        "withdrawal_scope",
+        "downstream_reviewed"
+      ],
+      "impacts": [
+        "results",
+        "advancement",
+        "reports"
+      ],
+      "acceptance": "原始状态排名处理按规程",
+      "evidence": "static"
+    },
+    {
+      "id": "live.clear_score",
+      "title": "单场或批量清空比分",
+      "kind": "write",
+      "methods": [
+        "markGl/adminRemoveMark",
+        "markGl/adminRemoveMarkBatch"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "destructive_scope",
+        "downstream_reviewed"
+      ],
+      "impacts": [
+        "results",
+        "advancement",
+        "reports"
+      ],
+      "acceptance": "与取消判罚顺序及受影响下游",
+      "evidence": "static"
+    },
+    {
+      "id": "live.court",
+      "title": "现场临时调场",
+      "kind": "write",
+      "methods": [
+        "lsDcSave"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "match_identity",
+        "move_scope",
+        "scheduling_valid"
+      ],
+      "impacts": [
+        "schedule",
+        "control"
+      ],
+      "acceptance": "原新场地冲突和屏幕",
+      "evidence": "static"
+    },
+    {
+      "id": "live.lineup",
+      "title": "团体出场名单保存清除锁定拉取",
+      "kind": "write",
+      "methods": [
+        "teamRmdData",
+        "teamRmdSave",
+        "teamRemoveRmdSave",
+        "setSdLqTeamRmd"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "match_identity",
+        "team_scope"
+      ],
+      "impacts": [
+        "lineups",
+        "control",
+        "schedule"
+      ],
+      "acceptance": "每场出场名单兼项资格",
+      "evidence": "static"
+    },
+    {
+      "id": "live.team_order",
+      "title": "团体场次顺序特殊设置",
+      "kind": "write",
+      "methods": [
+        "getTeamXmidCcSxh",
+        "saveTeamSxh",
+        "getTsData",
+        "saveTsData"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "team_scope"
+      ],
+      "impacts": [
+        "lineups",
+        "control",
+        "results"
+      ],
+      "acceptance": "顺序获胜条件和终止规则",
+      "evidence": "static"
+    },
+    {
+      "id": "live.resolve_call",
+      "title": "完成裁判长或调度呼叫",
+      "kind": "write",
+      "methods": [
+        "hjCpzOrDyGl/hjClSuccess"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "call_scope"
+      ],
+      "impacts": [
+        "control"
+      ],
+      "acceptance": "指定呼叫状态",
+      "evidence": "static"
+    },
+    {
+      "id": "checkin.read",
+      "title": "查看人员签到及资料",
+      "kind": "read",
+      "methods": [
+        "getSingleRyList",
+        "getEditorRyInfo",
+        "getRyFjList"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access"
+      ],
+      "impacts": [],
+      "acceptance": "人员签到不等于场次检录",
+      "evidence": "static"
+    },
+    {
+      "id": "checkin.set",
+      "title": "签到取消签到",
+      "kind": "write",
+      "methods": [
+        "qdHandler"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "person_identity"
+      ],
+      "impacts": [
+        "checkin"
+      ],
+      "acceptance": "指定人员ISQD",
+      "evidence": "static"
+    },
+    {
+      "id": "publish.read",
+      "title": "读取规程通知与客户端可见性",
+      "kind": "read",
+      "methods": [
+        "mainLoadData"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access"
+      ],
+      "impacts": [],
+      "acceptance": "正文及所有原开关保留",
+      "evidence": "static"
+    },
+    {
+      "id": "publish.content",
+      "title": "填写规程补充通知富文本图片",
+      "kind": "write",
+      "methods": [
+        "saveEditor"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "content_valid",
+        "publication_scope"
+      ],
+      "impacts": [
+        "publication"
+      ],
+      "acceptance": "正文图片以及真实客户端",
+      "evidence": "static"
+    },
+    {
+      "id": "publish.visibility",
+      "title": "报表项目可见性一键发布头像",
+      "kind": "write",
+      "methods": [
+        "saveSet",
+        "saveYjfbData",
+        "setTxImg"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "publication_scope"
+      ],
+      "impacts": [
+        "publication"
+      ],
+      "acceptance": "按项目按端检查不等于上传任意附件",
+      "evidence": "static"
+    },
+    {
+      "id": "reports.export",
+      "title": "导出名单签表节目单秩序册成绩场序缺勤",
+      "kind": "read",
+      "methods": [
+        "getMdGs",
+        "getCqGs",
+        "getJmdData",
+        "getZxcData",
+        "getCjpmData",
+        "getCjcData",
+        "getCxbHandler",
+        "getQqTjb"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access"
+      ],
+      "impacts": [],
+      "acceptance": "全项目目录刷新文件签名内容与筛选范围",
+      "evidence": "static"
+    },
+    {
+      "id": "reports.settings",
+      "title": "报表格式设置",
+      "kind": "write",
+      "methods": [
+        "saveCdSet"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "report_policy"
+      ],
+      "impacts": [
+        "reports"
+      ],
+      "acceptance": "下载样式和保留字段",
+      "evidence": "static"
+    },
+    {
+      "id": "reports.points",
+      "title": "生成羽协积分",
+      "kind": "write",
+      "methods": [
+        "zgYxJfGl/createJf"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "results_verified",
+        "points_policy"
+      ],
+      "impacts": [
+        "points"
+      ],
+      "acceptance": "系数排名范围积分生成结果",
+      "evidence": "static"
+    },
+    {
+      "id": "permissions.read",
+      "title": "查询赛事人员权限",
+      "kind": "read",
+      "methods": [
+        "mainLoadData",
+        "getPrydmTrial"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access"
+      ],
+      "impacts": [],
+      "acceptance": "角色有效期状态场地",
+      "evidence": "static"
+    },
+    {
+      "id": "permissions.edit",
+      "title": "授权裁判管理人员移除权限默认场地",
+      "kind": "account",
+      "methods": [
+        "insertOrDelOrUpdateSsQx",
+        "delCpyHandler",
+        "ssInUpdateMrcdh"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "permission_scope"
+      ],
+      "impacts": [
+        "permissions"
+      ],
+      "acceptance": "用户角色生效期和默认场地",
+      "evidence": "static"
+    },
+    {
+      "id": "referees.read",
+      "title": "查询全局裁判员",
+      "kind": "read",
+      "methods": [
+        "mainLoadData"
+      ],
+      "requires": [
+        "role_access"
+      ],
+      "impacts": [],
+      "acceptance": "只读指定范围资料",
+      "evidence": "static"
+    },
+    {
+      "id": "referees.edit",
+      "title": "增改裁判员资料及表格导入",
+      "kind": "account",
+      "methods": [
+        "insertCpy",
+        "updateCpyInfo及当前上传合同"
+      ],
+      "requires": [
+        "role_access",
+        "permission_scope"
+      ],
+      "impacts": [
+        "referees"
+      ],
+      "acceptance": "全局资料与赛事授权分别核对",
+      "evidence": "static"
+    },
+    {
+      "id": "accounts.read",
+      "title": "查看子账号",
+      "kind": "read",
+      "methods": [
+        "getAllAdminUser"
+      ],
+      "requires": [
+        "role_access"
+      ],
+      "impacts": [],
+      "acceptance": "角色状态和关联范围",
+      "evidence": "static"
+    },
+    {
+      "id": "accounts.manage",
+      "title": "子账号增改删锁定解锁",
+      "kind": "account",
+      "methods": [
+        "addOrEditorOrDelChildUser",
+        "sdOrJsHandler"
+      ],
+      "requires": [
+        "role_access",
+        "account_scope"
+      ],
+      "impacts": [
+        "accounts"
+      ],
+      "acceptance": "账户范围费用与状态",
+      "evidence": "static"
+    },
+    {
+      "id": "accounts.password",
+      "title": "修改重置子账号密码",
+      "kind": "account",
+      "methods": [
+        "updateMm",
+        "resestMm"
+      ],
+      "requires": [
+        "role_access",
+        "account_scope"
+      ],
+      "impacts": [
+        "accounts"
+      ],
+      "acceptance": "授权对象和结果；不记录密码",
+      "evidence": "static"
+    },
+    {
+      "id": "finance.read",
+      "title": "查看财务收支",
+      "kind": "read",
+      "methods": [
+        "mainLoadData"
+      ],
+      "requires": [
+        "role_access"
+      ],
+      "impacts": [],
+      "acceptance": "查询期间金额与分页",
+      "evidence": "static"
+    },
+    {
+      "id": "transactions.read",
+      "title": "报名交易流水退费记录",
+      "kind": "read",
+      "methods": [
+        "jyjlList",
+        "allJyjlList",
+        "getSsList"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access"
+      ],
+      "impacts": [],
+      "acceptance": "实付已退待处理分别读取",
+      "evidence": "static"
+    },
+    {
+      "id": "transactions.refund",
+      "title": "报名退款退费",
+      "kind": "financial",
+      "methods": [
+        "tfczHandler"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "payment_scope"
+      ],
+      "impacts": [
+        "payments",
+        "registration"
+      ],
+      "acceptance": "订单金额通道和实际退款状态",
+      "evidence": "static"
+    },
+    {
+      "id": "transactions.initialize",
+      "title": "初始化线下优惠订单记录",
+      "kind": "financial",
+      "methods": [
+        "initXxYhddJl"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "payment_scope"
+      ],
+      "impacts": [
+        "payments"
+      ],
+      "acceptance": "不是查询动作",
+      "evidence": "static"
+    },
+    {
+      "id": "settlement.read",
+      "title": "查看分账记录和对账条件",
+      "kind": "read",
+      "methods": [
+        "当前列表读取合同"
+      ],
+      "requires": [
+        "role_access"
+      ],
+      "impacts": [],
+      "acceptance": "分页期间和查询模式",
+      "evidence": "static"
+    },
+    {
+      "id": "settlement.pay",
+      "title": "生成批量分账补发结算",
+      "kind": "financial",
+      "methods": [
+        "createFz",
+        "batchCreateFz",
+        "bufaFz及当前合同"
+      ],
+      "requires": [
+        "role_access",
+        "payment_scope"
+      ],
+      "impacts": [
+        "payments"
+      ],
+      "acceptance": "订单金额接收方分账状态防重复",
+      "evidence": "static"
+    },
+    {
+      "id": "merchant.read",
+      "title": "查看接收人银行商户",
+      "kind": "read",
+      "methods": [
+        "getJsrList",
+        "getMerchantList"
+      ],
+      "requires": [
+        "role_access"
+      ],
+      "impacts": [],
+      "acceptance": "主体归属和绑定现状",
+      "evidence": "static"
+    },
+    {
+      "id": "merchant.bind",
+      "title": "绑定解绑商户删除接收人",
+      "kind": "financial",
+      "methods": [
+        "bindMerchant",
+        "unbindMerchant",
+        "deleteJsr"
+      ],
+      "requires": [
+        "role_access",
+        "payment_scope"
+      ],
+      "impacts": [
+        "payments"
+      ],
+      "acceptance": "主体归属绑定及既有订单影响",
+      "evidence": "static"
+    },
+    {
+      "id": "ai.analyze",
+      "title": "AI生成编排建议",
+      "kind": "compute",
+      "methods": [
+        "当前AiSchedulePage分析请求"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "ai_data_scope"
+      ],
+      "impacts": [
+        "ai_candidates"
+      ],
+      "acceptance": "输入范围及候选约束验证不当成已编排",
+      "evidence": "static"
+    },
+    {
+      "id": "ai.apply",
+      "title": "应用AI编排结果",
+      "kind": "write",
+      "methods": [
+        "applyScheduleResult"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "ai_candidate",
+        "scheduling_valid"
+      ],
+      "impacts": [
+        "schedule",
+        "sections",
+        "reports"
+      ],
+      "acceptance": "全量场次位置和硬约束前移验证",
+      "evidence": "static"
+    },
+    {
+      "id": "knowledge.read",
+      "title": "读取AI编排知识库案例",
+      "kind": "read",
+      "methods": [
+        "healthCheck",
+        "getKnowledge",
+        "getAnnotationList"
+      ],
+      "requires": [
+        "role_access"
+      ],
+      "impacts": [],
+      "acceptance": "真实条目而非生成编排",
+      "evidence": "static"
+    },
+    {
+      "id": "knowledge.save",
+      "title": "保存编排知识库案例标注",
+      "kind": "write",
+      "methods": [
+        "saveKnowledge",
+        "saveAnnotation"
+      ],
+      "requires": [
+        "role_access",
+        "knowledge_scope"
+      ],
+      "impacts": [
+        "ai_knowledge"
+      ],
+      "acceptance": "条目版本和实际保存结果",
+      "evidence": "static"
+    },
+    {
+      "id": "knowledge.consult",
+      "title": "AI咨询分析赛程",
+      "kind": "compute",
+      "methods": [
+        "consultAI",
+        "analyzeSchedule"
+      ],
+      "requires": [
+        "role_access",
+        "ai_data_scope"
+      ],
+      "impacts": [
+        "ai_candidates"
+      ],
+      "acceptance": "是否发送人员信息及结果范围",
+      "evidence": "static"
+    },
+    {
+      "id": "demo.wizard",
+      "title": "创建比赛向导模拟导入抽签编排开赛",
+      "kind": "demo",
+      "methods": [
+        "handleBeforeUpload",
+        "performDraw",
+        "performArrangement",
+        "enableControl"
+      ],
+      "requires": [],
+      "impacts": [],
+      "acceptance": "模拟数组和延迟不代表落库",
+      "evidence": "static"
+    },
+    {
+      "id": "demo.check",
+      "title": "比赛检查准备度检查",
+      "kind": "demo",
+      "methods": [
+        "callApi",
+        "startMatch"
+      ],
+      "requires": [],
+      "impacts": [],
+      "acceptance": "随机success和count不能作为验收",
+      "evidence": "static",
+      "route": "/trialCheckGlIndex",
+      "component": "TrialCheckGlIndex"
+    },
+    {
+      "id": "checkdesk.read",
+      "title": "打开检录屏查看待检录场次",
+      "kind": "read",
+      "methods": [
+        "当前检录页读取合同"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access"
+      ],
+      "impacts": [],
+      "acceptance": "场次人员与检录状态",
+      "evidence": "static"
+    },
+    {
+      "id": "checkdesk.set",
+      "title": "检录确认取消检录",
+      "kind": "write",
+      "methods": [
+        "jlSave"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "match_identity"
+      ],
+      "impacts": [
+        "checkin",
+        "control"
+      ],
+      "acceptance": "场次检录状态不是人员签到",
+      "evidence": "static"
+    },
+    {
+      "id": "display.open",
+      "title": "打开大屏直播手机单场显示样式",
+      "kind": "read",
+      "methods": [
+        "当前显示页读取合同"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access"
+      ],
+      "impacts": [],
+      "acceptance": "场地小节比分与显示端一致",
+      "evidence": "static"
+    },
+    {
+      "id": "display.notify",
+      "title": "检录屏手动提醒",
+      "kind": "notify",
+      "methods": [
+        "sdJianLuNofity"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "notification_scope"
+      ],
+      "impacts": [
+        "notifications"
+      ],
+      "acceptance": "实际渠道接收人发送结果",
+      "evidence": "static"
+    },
+    {
+      "id": "certificate.layout",
+      "title": "证书底图及文字坐标设置",
+      "kind": "local",
+      "methods": [
+        "当前坐标工具本地画布"
+      ],
+      "requires": [],
+      "impacts": [],
+      "acceptance": "文字位置图片尺寸与导出结果不等于成绩证书已发布",
+      "evidence": "static"
+    },
+    {
+      "id": "users.read",
+      "title": "用户管理查询用户",
+      "kind": "read",
+      "methods": [
+        "mainLoadData"
+      ],
+      "requires": [
+        "role_access"
+      ],
+      "impacts": [],
+      "acceptance": "账户角色与范围",
+      "evidence": "static"
+    },
+    {
+      "id": "users.reset",
+      "title": "管理端重置用户密码",
+      "kind": "account",
+      "methods": [
+        "resetPassword"
+      ],
+      "requires": [
+        "role_access",
+        "account_scope"
+      ],
+      "impacts": [
+        "accounts"
+      ],
+      "acceptance": "确切对象与结果不保存密码",
+      "evidence": "static"
+    },
+    {
+      "id": "shop.quote",
+      "title": "查看赛事充值费用支付状态",
+      "kind": "read",
+      "methods": [
+        "getSsInfo",
+        "jsZbmfZje",
+        "queryResult"
+      ],
+      "requires": [
+        "role_access",
+        "payment_target"
+      ],
+      "impacts": [],
+      "acceptance": "只查报价或已有订单；页面getBmPayZjeHandler查询后会继续payHandler创建订单，不能作为只读调用",
+      "evidence": "static"
+    },
+    {
+      "id": "shop.pay",
+      "title": "创建充值支付订单",
+      "kind": "financial",
+      "methods": [
+        "pcCenterPay"
+      ],
+      "requires": [
+        "role_access",
+        "payment_scope"
+      ],
+      "impacts": [
+        "payments"
+      ],
+      "acceptance": "订单支付与账户余额不可凭跳转推定",
+      "evidence": "static"
+    },
+    {
+      "id": "stats.read",
+      "title": "赛事统计跨赛事报名及交易查询",
+      "kind": "read",
+      "methods": [
+        "当前AllXmZbxxCom与ReportAllJyjlCom查询合同"
+      ],
+      "requires": [
+        "role_access"
+      ],
+      "impacts": [],
+      "acceptance": "赛事筛选与全量分页避免跨赛事混合",
+      "evidence": "static"
+    },
+    {
+      "id": "assistant.chat",
+      "title": "AI助手咨询与聊天历史",
+      "kind": "compute",
+      "methods": [
+        "当前聊天服务合同"
+      ],
+      "requires": [
+        "role_access",
+        "ai_data_scope"
+      ],
+      "impacts": [
+        "ai_candidates"
+      ],
+      "acceptance": "咨询输入与真实业务操作分开",
+      "evidence": "static"
+    },
+    {
+      "id": "assistant.create",
+      "title": "AI助手确认创建赛事",
+      "kind": "write",
+      "methods": [
+        "insertOrUpdateOrDeleteSs"
+      ],
+      "requires": [
+        "role_access",
+        "sport_identity",
+        "creation_fields"
+      ],
+      "impacts": [
+        "event"
+      ],
+      "acceptance": "真实ID与表单回读不能凭聊天文本",
+      "evidence": "static"
+    },
+    {
+      "id": "membership.read",
+      "title": "查看会员充值核销余额记录",
+      "kind": "read",
+      "methods": [
+        "centerJyjl",
+        "centerKkjl"
+      ],
+      "requires": [
+        "role_access"
+      ],
+      "impacts": [],
+      "acceptance": "期间分页充值核销余额分别核对",
+      "evidence": "static"
+    },
+    {
+      "id": "events.settle",
+      "title": "报名费结算及确认对账",
+      "kind": "financial",
+      "methods": [
+        "enterBmfJs",
+        "enterDz",
+        "createMxJe"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "payment_scope"
+      ],
+      "impacts": [
+        "payments"
+      ],
+      "acceptance": "结算对账状态金额及明细；确认对账具有写入效果",
+      "evidence": "static"
+    }
+  ]
+}

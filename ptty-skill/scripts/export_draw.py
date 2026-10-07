@@ -2,6 +2,7 @@
 """Export a validated offline draw to an existing PTTY .xls draw template."""
 import argparse
 import json
+import re
 from pathlib import Path
 
 import xlrd
@@ -17,6 +18,18 @@ def require(ok, message):
         raise ValueError(message)
 
 HEADERS = ['项目ID','阶段','附加','组别','项目名称','项目类型','赛事种类','组号/轮次号','位置号','2分区','4分区','8分区','16分区','队伍名称','姓名','性别','队内技术号','种子号','前阶段名次','识别码']
+
+
+def same_entry_name(local, platform, event_type):
+    """Allow only the observed doubles separator variation, retaining member order."""
+    if local == platform:
+        return True
+    if event_type not in ('MD', 'WD', 'XD', 'SD') or not all(
+            isinstance(v, str) for v in (local, platform)):
+        return False
+    left, right = ([part.strip() for part in re.split(r'[/／]', v)]
+                   for v in (local, platform))
+    return len(left) == len(right) == 2 and all(left) and left == right
 
 
 def export(config, result, mapping, template, output, core_skill=None):
@@ -84,11 +97,13 @@ def export(config, result, mapping, template, output, core_skill=None):
             require(m['seed']==a['seed'] and m['club']==a['club'] and m['name']==a['name'], '人员映射与抽签记录不符')
             source_row,person=entrants[m['XMNM']]
             values=person[3:10]
-            require(values[0] == a['club'] and values[1] == a['name'], '模板姓名/队名与报名项不一致')
+            require(values[0] == a['club'] and same_entry_name(a['name'], values[1], person[2]),
+                    '模板姓名/队名与报名项不一致')
             values[4]=str(a['seed']) if a['seed'] else ''
             key=(project['project_id'],a['group'],a['position'])
             require(key in template_slots and key not in written, '导出位置不存在或重复')
             row=template_slots[key]
+            require(s.cell_value(row,5) == person[2], '模板签位与报名项的项目类型不一致')
             require(s.cell_value(row,14)!='轮空', '不能向轮空位置填人')
             for col,value in enumerate(values,13):put(sheet,row,col,value)
             put(ranksheet,source_row,7,values[4])

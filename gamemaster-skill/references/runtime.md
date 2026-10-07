@@ -10,6 +10,7 @@
 | PDF | Python reportlab、包含所需中文字符的TTF字体 |
 | LaTeX PDF | 本地XeLaTeX或Tectonic，ctex等宏包与字体已缓存；仅本地编译 |
 | 旧XLS/图片/扫描PDF输入 | 按输入实际需要准备xlrd、本地PDF/OCR或可用视觉读取能力；不将读取失败当空表 |
+| 规则书扫描件OCR建库 | 可选 pymupdf、rapidocr_onnxruntime及随包模型；OCR索引检索仅需Python标准库，见[阅读索引](badminton/cba-2023.md) |
 
 ```bash
 python scripts/check_runtime.py --feature core

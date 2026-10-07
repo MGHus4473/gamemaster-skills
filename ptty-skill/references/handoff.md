@@ -29,6 +29,7 @@ python scripts/validate_handoff.py path/to/handoff.json
 
 - 名单：读取当前赛事 `XMID` 后填项目元数据，每名真实运动员的性别 M/W 来自已确认资料。未填身份预留项直接导入尚未验证；不得编造性别、证件或运动员来过校验。
 - 抽签：`export_draw.py` 适配已核验20列抽签表；N—T为人员区，模板识别码 `XMNM` 与人员/组合整体移动。导入不等于保存种子元数据。
+- 双打姓名只允许已观察的半角/全角斜线和分隔符两侧空格差异；逐成员保留顺序，不排序、删去姓名内部空格或模糊匹配。模板的项目类型、完整单位、识别码仍须一致，输出保留原人员单元格。
 - 编排：`export_schedule.py` 适配赛事编排工作表；每个场地单元格末行使用当前真实 `CCH`。独立本地 ID 在交接映射中保留。文件导出前调用离线引擎的`acceptance`，独立核对完整性、硬约束来源及可接受的前移/换位改进；来源缺失、仍可改进或验收搜索未完成时拒绝正式导出。先按离线 skill 的[时间编排约定](../../gamemaster-skill/references/time-court-scheduling.md)优化，再输出原格式导入表及含指标、差异、等待原因的独立审阅表；不改变平台模板结构。
 - 两个适配器通过 `--core-skill` 读取离线算法校验器；具体参数用 `--help` 查看。
 
@@ -39,7 +40,9 @@ python scripts/export_draw.py draw-input.json draw-result.json entry-map.json �
 python scripts/export_schedule.py schedule-input.json schedule-result.json 当前编排模板.xlsx 编排导入.xlsx 编排审阅.xlsx --core-skill /path/to/gamemaster-skill
 ```
 
-两个 skill 安装于同级目录时可省略 `--core-skill`。抽签导出自动另存 `_审阅.xlsx`；编排指定独立审阅文件。输出必须使用新路径，旧版成果保留；抽签模板/输出为真实 `.xls`，编排模板/输出为 `.xlsx`。编排校验输入哈希、赛事、完整时段网格、场次ID及硬约束，拒绝结果与输入版本错配。当前编排适配器只接受第二张“场次工作表”为空的已验证结构；发现其他内容先核实新模板，不携带旧场次直接输出。
+两个 skill 安装于同级目录时可省略 `--core-skill`。抽签导出自动另存 `_审阅.xlsx`；编排指定独立审阅文件。输出必须使用新路径，旧版成果保留；抽签模板/输出为真实 `.xls`，编排模板/输出为 `.xlsx`。编排校验输入哈希、赛事、完整时段网格、场次ID及硬约束，拒绝结果与输入版本错配。
+
+第二张“场次工作表”允许为空，或使用已验证的静态场次卡结构：前四列表头为`项目ID、项目全称、赛事种类、轮次`，不同项目/阶段之间可重复完全相同的表头，其余列须为空。卡片通常六行；已确定双打成员可占两行，使卡片变为七行，此时须提供来自方案的`platform_event_type:MD/WD/XD/SD`。末行均为真实CCH。非空模板要求各场提供`platform_project_id、project_name、platform_format、round、platform_display_code、platform_match_id`，逐卡核对项目、赛制、轮次、显示码与CCH，并完整覆盖本次场次且不重复；拒绝公式、合并格、未知或错配卡片。导入格复用核验后的平台卡片，无需额外提供空模板所用的`template_title`；第二表保留，保存后只容许XML换行形式归一化。人员及胜负者标签仍须与当前抽签/场次回读核对，卡片ID核验不代替对阵校验。
 
 `entry-map.json` 为数组，逐项提供本地 `project_id、entry_id`，目标 `platform_project_id`（当前阶段XMID）、`XMNM`，以及核对字段 `name、club、seed`。同一本地项目的所有项映射到同一平台项目；不同本地项目不共用一个目标XMID。历史数据本地项目ID本身即XMID时可省略 `platform_project_id`，新离线流程应显式绑定，不能为了适配模板而重写本地项目ID。
 

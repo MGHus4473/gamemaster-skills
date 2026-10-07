@@ -49,11 +49,19 @@ export function validateOptions(o) {
   return o;
 }
 
+export function assertPageForAction(location, action) {
+  const expected = {plan: '/trialGhIndex', report: '/trialCdGlIndex', qr: '/trialScreenSet'};
+  if (action === 'snapshot') return;
+  const route = location.hash.split('?')[0].replace(/^#/, '');
+  if (!expected[action] || route !== expected[action]) throw Error('open the verified route for this read action');
+}
+
 export function expression(options) {
   const o = validateOptions(options);
   // The body is fixed. User arguments enter only through JSON data.
-  return `(${async function (opts, assertAdmin, checkPublicUrl) {
+  return `(${async function (opts, assertAdmin, checkPublicUrl, assertPage) {
     assertAdmin(location);
+    assertPage(location, opts.action);
     const eventText = document.body.innerText;
     if (!eventText.includes(opts.event + '/')) throw Error('current event mismatch or login expired');
     const components = [...new Set([...document.querySelectorAll('*')].map(e => e.__vue__).filter(Boolean))];
@@ -74,16 +82,19 @@ export function expression(options) {
       // The UI loads different project catalogs for roster vs generated-match reports.
       // Query the observed read endpoint explicitly; do not reuse a previous tab's options.
       const catalog = opts.kind === 'getMdGs' ? 'getXmIds' : 'getCreateScXmIds';
-      v.utilPost.paramData = {headerData: {ssid: v.ssid, op: 'currData', methodName: ''}, busData: {methodNameS: [catalog], paramJob: {}}};
-      const catalogResult = await v.utilPost.sendPost();
-      const available = catalogResult?.content?.[catalog];
-      if (!catalogResult?.isSuccess || !Array.isArray(available)) throw Error('project catalog query failed');
-      const selected = opts.projectIds || available.map(x => x.XMID);
-      if (!selected.length || selected.some(id => !available.some(x => x.XMID === id))) throw Error('missing or unknown project selection');
-      const saved = {activeName: v.activeName, xmids: v.xmids};
-      let url;
-      try { v.activeName = opts.kind; v.xmids = selected; url = await v.getDownUrl('1'); }
-      finally { v.activeName = saved.activeName; v.xmids = saved.xmids; }
+      const saved = {activeName: v.activeName, xmids: v.xmids, request: v.utilPost.paramData};
+      let url, available, selected;
+      try {
+        v.utilPost.paramData = {headerData: {ssid: v.ssid, op: 'currData', methodName: ''}, busData: {methodNameS: [catalog], paramJob: {}}};
+        const catalogResult = await v.utilPost.sendPost();
+        available = catalogResult?.content?.[catalog];
+        if (!catalogResult?.isSuccess || !Array.isArray(available)) throw Error('project catalog query failed');
+        selected = opts.projectIds || available.map(x => x.XMID);
+        if (!selected.length || selected.some(id => !available.some(x => x.XMID === id))) throw Error('missing or unknown project selection');
+        v.activeName = opts.kind; v.xmids = selected; url = await v.getDownUrl('1');
+      } finally {
+        v.activeName = saved.activeName; v.xmids = saved.xmids; v.utilPost.paramData = saved.request;
+      }
       const parsed = new URL(url);
       if (!['https:', 'http:'].includes(parsed.protocol) || parsed.username || parsed.password ||
           !(parsed.hostname === 'ptty.com.cn' || parsed.hostname.endsWith('.ptty.com.cn'))) throw Error('unexpected download origin');
@@ -100,13 +111,17 @@ export function expression(options) {
     const request = opts.kind === 'event'
       ? {headerData: {ssid: v.ssid, op: 'trialItemGl', methodName: 'generateQrCode'}, busData: {ssid: v.ssid}}
       : {headerData: {ssid: '', op: 'ssGl', methodName: opts.kind === 'referee' ? 'getCpyTwoCode' : 'getPadTwoCode'}, busData: {ssidEn: v.ssid}};
-    v.utilPost.paramData = request;
-    const response = await v.utilPost.sendPost();
+    const previousRequest = v.utilPost.paramData;
+    let response;
+    try {
+      v.utilPost.paramData = request;
+      response = await v.utilPost.sendPost();
+    } finally { v.utilPost.paramData = previousRequest; }
     if (!response.isSuccess) throw Error('platform QR export failed');
     const entryCheck = opts.kind === 'event' ? checkPublicUrl(response.content.url) : undefined;
     return {event: opts.event, kind: opts.kind, base64: opts.kind === 'event' ? response.content.qrCodeBase64 : response.content,
             event_url: opts.kind === 'event' ? response.content.url : undefined, entry_check: entryCheck};
-  }.toString()})(${JSON.stringify(o)},${assertAdminLocation.toString()},${validatePublicEventUrl.toString()})`;
+  }.toString()})(${JSON.stringify(o)},${assertAdminLocation.toString()},${validatePublicEventUrl.toString()},${assertPageForAction.toString()})`;
 }
 
 export async function evaluate(pageSocket, code) {
@@ -130,7 +145,10 @@ export async function evaluate(pageSocket, code) {
 export function decodeFile(result, action, path) {
   const bytes = Buffer.from(result.base64, 'base64');
   if (action === 'qr') {
-    if (!bytes.subarray(0, 8).equals(Buffer.from([137,80,78,71,13,10,26,10])) || !path.toLowerCase().endsWith('.png')) throw Error('QR download is not a PNG or wrong output suffix');
+    const isPng = bytes.subarray(0, 8).equals(Buffer.from([137,80,78,71,13,10,26,10]));
+    const isJpeg = bytes.subarray(0, 3).equals(Buffer.from([255,216,255]));
+    if (!isPng && !isJpeg) throw Error('QR download is not a PNG/JPEG; possible login/error response');
+    if (isPng && !/\.png$/i.test(path) || isJpeg && !/\.jpe?g$/i.test(path)) throw Error('QR output extension disagrees with file signature');
   } else {
     const isZip = bytes[0] === 0x50 && bytes[1] === 0x4b;
     const isOle = bytes.subarray(0, 4).equals(Buffer.from([0xd0,0xcf,0x11,0xe0]));

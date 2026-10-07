@@ -206,6 +206,8 @@ def rank_group(group, matches):
     criteria = policy.get('criteria')
     require(isinstance(criteria, list) and criteria, 'Explicit ranking criteria required')
     require(type(policy.get('restart_after_split')) is bool, 'ranking.restart_after_split must be explicit')
+    two_entry_rule = policy.get('two_entry_tie_break', 'criteria')
+    require(two_entry_rule in ('criteria', 'head_to_head_wins'), 'Unknown two_entry_tie_break')
     for c in criteria:
         require(c.get('metric') in METRICS and c.get('scope') in ('all', 'tied'), 'Invalid ranking criterion')
     usable, counts, pending = [], {}, []
@@ -276,8 +278,18 @@ def rank_group(group, matches):
             return a - b
         # Exact ratio; zero denominator wins over every finite ratio, 0/0 stays 0.
         return (1, Fraction(0)) if b == 0 and a else (0, Fraction(a, b) if b else Fraction(0))
-    def split(block, step):
-        if len(block) == 1 or step == len(criteria):
+    def split(block, step, within_tie=False):
+        if len(block) == 1:
+            return [block]
+        if within_tie and len(block) == 2 and two_entry_rule == 'head_to_head_wins':
+            mutual = stats(block)
+            ordered_pair = sorted(block, key=lambda i: mutual[i]['wins'], reverse=True)
+            if mutual[ordered_pair[0]]['wins'] != mutual[ordered_pair[1]]['wins']:
+                resolved = [[i] for i in ordered_pair]
+                trace.append({'entry_ids': block, 'criterion': {'metric': 'head_to_head_wins', 'scope': 'tied'},
+                              'mutual_wins': {i: mutual[i]['wins'] for i in block}, 'blocks': resolved})
+                return resolved
+        if step == len(criteria):
             return [block]
         c = criteria[step]
         st = overall if c['scope'] == 'all' else stats(block)
@@ -287,9 +299,9 @@ def rank_group(group, matches):
         ordered = [buckets[v] for v in sorted(buckets, reverse=True)]
         trace.append({'entry_ids': block, 'criterion': c, 'blocks': ordered})
         if len(ordered) == 1:
-            return split(block, step + 1)
+            return split(block, step + 1, True)
         nxt = 0 if policy['restart_after_split'] else step + 1
-        return [b for sub in ordered for b in split(sub, nxt)]
+        return [b for sub in ordered for b in split(sub, nxt, True)]
     blocks = split(active, 0) if not issue else [active]
     used_decisions = set()
     decisions = group.get('tie_decisions', [])
@@ -404,6 +416,11 @@ def evaluate(data):
                'scoring_mode': rule['mode'], 'scoring_rule': deepcopy(rule), 'waived_predecessors': []}
         if status in FINAL:
             require(all(ids), f'{mid}: preceding result/rank unresolved')
+            if 'entry_ids' in r:
+                require(r['entry_ids'] == ids, f'{mid}: result participant entry binding changed; adjudicate before reuse')
+            if 'member_ids' in r:
+                require(r['member_ids'] == [entries[i].get('member_ids', []) for i in ids],
+                        f'{mid}: result participant member binding changed; adjudicate before reuse')
             outcome_sources = {s['match_id'] for s in m['sides'] if s.get('kind') in ('winner', 'loser')}
             for predecessor in explicit:
                 if predecessor['status'] in FINAL:
@@ -514,8 +531,28 @@ def evaluate(data):
             'groups': list(gcache.values()), 'placements': sorted(placements, key=lambda r: (r['project_id'], r['rank'])),
             'pending_match_ids': [i for i, r in cache.items() if r['status'] == 'pending' and i not in annulled],
             'cancelled_match_ids': [i for i, r in cache.items() if r['status'] == 'cancelled'],
+            'unbound_result_ids': [i for i, r in results.items() if r.get('status') in FINAL
+                                   and ('entry_ids' not in r or 'member_ids' not in r)],
             'annulled_match_ids': sorted(annulled),
             'unresolved_match_ids': [i for i, r in cache.items() if r['status'] not in FINAL and i not in annulled]}
+
+
+def bind_result_participants(data):
+    """Freeze both sides of existing final results BEFORE editing upstream facts.
+
+    This is a local snapshot, not evidence of actual play or permission to replace
+    a result. Legacy unbound scores must be checked against their original source.
+    """
+    report = evaluate(data)
+    resolved = {m['match_id']: m for m in report['matches']}
+    entries = index(data.get('entries', []))
+    bound = deepcopy(data)
+    for r in bound.get('results', []):
+        if r.get('status') in FINAL:
+            ids = resolved[r['match_id']]['entry_ids']
+            r['entry_ids'] = deepcopy(ids)
+            r['member_ids'] = [deepcopy(entries[i].get('member_ids', [])) for i in ids]
+    return bound
 
 
 def entry_text(entry, people):
@@ -623,9 +660,22 @@ def main():
     parser.add_argument('input', type=Path, help='Match graph with project scoring and results')
     parser.add_argument('--output', required=True, type=Path, help='New export directory')
     parser.add_argument('--no-xlsx', action='store_true', help='Standard-library-only JSON/CSV')
+    parser.add_argument('--bind-participants-out', type=Path,
+                        help='New JSON snapshot binding both sides before any result/roster change')
     args = parser.parse_args()
-    report = evaluate(json.loads(args.input.read_text(encoding='utf-8')))
+    data = json.loads(args.input.read_text(encoding='utf-8'))
+    bound = bind_result_participants(data) if args.bind_participants_out else None
+    if args.bind_participants_out:
+        require(not args.bind_participants_out.exists(), 'Bound snapshot must use a new path')
+        require(args.bind_participants_out.resolve() not in
+                {args.output.resolve() / name for name in ('成绩数据.json', '成绩排名.csv', '逐场成绩.csv', '成绩排名.xlsx')},
+                'Bound snapshot conflicts with a report output path')
+    report = evaluate(data)
     export_report(report, args.output, not args.no_xlsx)
+    if args.bind_participants_out:
+        args.bind_participants_out.parent.mkdir(parents=True, exist_ok=True)
+        with args.bind_participants_out.open('x', encoding='utf-8') as file:
+            json.dump(bound, file, ensure_ascii=False, indent=2)
     print(json.dumps({'matches': len(report['matches']), 'placements': len(report['placements']),
                       'pending': len(report['pending_match_ids']), 'output': str(args.output)}, ensure_ascii=False))
 

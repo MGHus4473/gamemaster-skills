@@ -1,0 +1,1623 @@
+{
+  "schema_version": 1,
+  "checked_on": "2026-10-07",
+  "scope": "标准羽毛球常见判罚与赛事规则；按已知版本选择，不宣称收录全部最新专项规定。",
+  "sources": [
+    {
+      "id": "cba-book-2023",
+      "organization": "CBA",
+      "title": "羽毛球竞赛规则（2023）",
+      "version": "2023年8月第1版",
+      "kind": "historical_rulebook",
+      "effective_from": null,
+      "effective_until": null,
+      "published_on": null,
+      "published_month": "2023-08",
+      "host": "用户提供的中国羽协审定规则书扫描件（本地资料）",
+      "url": null,
+      "verification": "partial_scan_reviewed",
+      "cache_file": "cba-book-2023.pdf",
+      "sha256": "de696c83b478aead11ce77084912d7c89e6b3851477f5296d2f8b12466142bfe",
+      "pages": 334,
+      "printed_pages": 332,
+      "isbn": "9787500963288",
+      "publisher": "人民体育出版社",
+      "checked_on": "2026-10-07",
+      "missing_printed_pages": [
+        160,
+        196,
+        220,
+        287,
+        303
+      ],
+      "confirmed_content_missing": [
+        287,
+        303
+      ],
+      "page_segments": [
+        {
+          "pdf_start": 8,
+          "pdf_end": 166,
+          "printed_start": 1
+        },
+        {
+          "pdf_start": 167,
+          "pdf_end": 201,
+          "printed_start": 161
+        },
+        {
+          "pdf_start": 202,
+          "pdf_end": 224,
+          "printed_start": 197
+        },
+        {
+          "pdf_start": 225,
+          "pdf_end": 290,
+          "printed_start": 221
+        },
+        {
+          "pdf_start": 291,
+          "pdf_end": 305,
+          "printed_start": 288
+        },
+        {
+          "pdf_start": 306,
+          "pdf_end": 334,
+          "printed_start": 304
+        }
+      ],
+      "reviewed_pdf_pages": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        106,
+        107,
+        108,
+        109,
+        110,
+        145,
+        146
+      ],
+      "note": "334页扫描件已核对页码序列；五个书页码未出现，其中287、303为英文技术官员指南正文缺页，160、196、220是否为空白页待核。仅所列知识卡及原页经视觉核验；全书OCR不是逐字审定。版权页只有出版月份，不虚构统一生效日；2025版全文缺口仍保留。"
+    },
+    {
+      "id": "bwf-laws-2025",
+      "organization": "BWF",
+      "title": "Laws of Badminton — Section 4.1",
+      "version": "5.0(2)",
+      "kind": "rules",
+      "effective_from": "2025-04-26",
+      "effective_until": "2027-01-03",
+      "published_on": null,
+      "host": "BWF官方文档站",
+      "url": "https://extranet.bwf.sport/docs/document-system/81/1466/1470/Section%204.1%20-%20Laws%20of%20Badminton%20-%2026%20April%202025%20V5.0%20%282%29%20.pdf",
+      "verification": "full_text",
+      "cache_file": "bwf-laws-2025-v2.pdf",
+      "sha256": "776169d2b9bb9f260dcff37d00e9a68f5ff80ce15af8a514a0a4f9b5c060ff43",
+      "pages": 14,
+      "note": "截至核验日的标准规则快照；结束日期依已公布的V6.0生效日划分，仍需核查后续修订。",
+      "checked_on": "2026-10-07"
+    },
+    {
+      "id": "bwf-laws-2027",
+      "organization": "BWF",
+      "title": "Laws of Badminton — Section 4.1",
+      "version": "6.0",
+      "kind": "rules",
+      "effective_from": "2027-01-04",
+      "effective_until": null,
+      "published_on": null,
+      "host": "Ghana Badminton（加纳羽协，托管BWF原文）",
+      "url": "https://ghanabadminton.org/wp-content/uploads/Section-4.1-Laws-of-Badminton-04-January-2027-V6.0.pdf",
+      "verification": "full_text",
+      "cache_file": "bwf-laws-2027.pdf",
+      "sha256": "c91c7d27db75a76d86d589b234e4e3b460d1f6900c89963ae5652dd93668490a",
+      "pages": 14,
+      "note": "未来版本；网页栏目写Updated 2026并不改变封面2027-01-04生效日期。",
+      "checked_on": "2026-10-07"
+    },
+    {
+      "id": "bwf-itto-2025",
+      "organization": "BWF",
+      "title": "Instructions to Technical Officials — Section 4.1.1",
+      "version": "8.0(2)",
+      "kind": "guidance",
+      "effective_from": "2025-11-17",
+      "effective_until": null,
+      "published_on": null,
+      "host": "Ghana Badminton（加纳羽协，托管BWF原文）",
+      "url": "https://ghanabadminton.org/wp-content/uploads/Section-4.1.1-Instructions-to-Technical-Officials-ITTO-17-November-2025-V8.0-2.pdf",
+      "verification": "full_text",
+      "cache_file": "bwf-itto-2025.pdf",
+      "sha256": "a72755458aa61ef07f2a2706b7656ecf429c00f742678f1226e2b167e1443df1",
+      "pages": 43,
+      "note": "引用GCR条款时，须按GCR自身版本重新定位，不能照搬旧交叉引用号。",
+      "checked_on": "2026-10-07"
+    },
+    {
+      "id": "bwf-gcr-2026",
+      "organization": "BWF",
+      "title": "General Competition Regulations — Section 5.1",
+      "version": "8.0",
+      "kind": "rules",
+      "effective_from": "2026-04-27",
+      "effective_until": null,
+      "published_on": null,
+      "host": "BWF官方文档站",
+      "url": "https://extranet.bwf.sport/docs/document-system/81/1466/1471/Section%205.1%20-%20General%20Competition%20Regulations%20-%20%2027%20April%202026%20V8.0.pdf",
+      "verification": "full_text",
+      "cache_file": "bwf-gcr-2026.pdf",
+      "sha256": "7fe16053d4808ded07c15b74b45e82802dc167d225f1e281246b2e1901adf291",
+      "pages": 49,
+      "note": "先核实第1条适用范围及赛事专项规则，不是所有国内或业余比赛的自动默认。",
+      "checked_on": "2026-10-07"
+    },
+    {
+      "id": "cba-review-2025",
+      "organization": "CBA",
+      "title": "《羽毛球竞赛规则(2025)》审定工作在安徽合肥举行",
+      "version": "2025-03-24公告",
+      "kind": "edition_notice",
+      "effective_from": null,
+      "effective_until": null,
+      "published_on": "2025-03-24",
+      "host": "中国羽毛球协会官网",
+      "url": "https://www.cba.org.cn/ssjj/gnss/2025/0324/645061.html",
+      "verification": "full_text",
+      "cache_file": "cba-2025-review.html",
+      "sha256": "f318f4d0ee7b80068e5dba61638f26eb0aa7a70c1780fdad368b5e44bd8f030e",
+      "pages": null,
+      "note": "已读公告正文；公告日期不是2025规则书生效日。网页哈希包含页面模板，变化不必然代表规则改动。",
+      "checked_on": "2026-10-07"
+    },
+    {
+      "id": "cba-simple-2022",
+      "organization": "CBA",
+      "title": "羽毛球比赛规则（简易版）",
+      "version": "2022-07-08公开版",
+      "kind": "historical_summary",
+      "effective_from": null,
+      "effective_until": null,
+      "published_on": "2022-07-08",
+      "host": "中国羽毛球协会官网",
+      "url": "https://www.cba.org.cn/xhgg/2022/0708/409503.html",
+      "verification": "image_text_reviewed",
+      "cache_file": "cba-simple-2022.html",
+      "sha256": "6bd329055e4634d7774937d3e10259ad0527a1bbd0e205582f03ac1e7eaed9f0",
+      "pages": 5,
+      "note": "五张规则图片已视觉核对。历史简易版只作参考，不能证明2025书全文或当前最新规则。",
+      "attachments": [
+        {
+          "url": "http://xhimg.sports.cn/Image/allimg/220708/72-220FQ61135617.jpg",
+          "cache_file": "cba-simple-1.jpg",
+          "sha256": "3ed354378da0482be305ac897a30b9f94ed9087430804799c6f94839dfdfe313",
+          "page": 1
+        },
+        {
+          "url": "http://xhimg.sports.cn/Image/allimg/220708/72-220FQ60319416.jpg",
+          "cache_file": "cba-simple-2.jpg",
+          "sha256": "a623418ea558c9c0922ee546e975703e11e65f91bdf33482b632afaab5e87d93",
+          "page": 2
+        },
+        {
+          "url": "http://xhimg.sports.cn/Image/allimg/220708/72-220FQ60331924.jpg",
+          "cache_file": "cba-simple-3.jpg",
+          "sha256": "6673b59358621bcbcc27369a0a3f567bd2aa9e05adab63cdb5973e6147224666",
+          "page": 3
+        },
+        {
+          "url": "http://xhimg.sports.cn/Image/allimg/220708/72-220FQ60342X5.jpg",
+          "cache_file": "cba-simple-4.jpg",
+          "sha256": "9efbe07549f0d96774df11d5820a1cf1de5ced841188e4d73af7f8310df83364",
+          "page": 4
+        },
+        {
+          "url": "http://xhimg.sports.cn/Image/allimg/220708/72-220FQ60355E9.jpg",
+          "cache_file": "cba-simple-5.jpg",
+          "sha256": "296ab1aa8d24917a19f252b2f44358c7bf080b5e0c71e9c4a63dd129fb285837",
+          "page": 5
+        }
+      ],
+      "checked_on": "2026-10-07"
+    },
+    {
+      "id": "cba-book-2025",
+      "organization": "CBA",
+      "title": "羽毛球竞赛规则（2025）",
+      "version": "2025（全文待核）",
+      "kind": "rulebook",
+      "effective_from": null,
+      "effective_until": null,
+      "published_on": null,
+      "host": "中国羽协审定公告，非规则书全文",
+      "url": "https://www.cba.org.cn/ssjj/gnss/2025/0324/645061.html",
+      "verification": "unavailable",
+      "cache_file": null,
+      "sha256": null,
+      "pages": null,
+      "note": "未取得完整正文，不能据BWF文本或2022简易版生成本书页码/条款号。官方审定说明所覆盖的BWF修订区间为2023年11月至2024年12月。",
+      "checked_on": "2026-10-07"
+    }
+  ],
+  "cards": [
+    {
+      "id": "cba-2023-score",
+      "title": "中国羽协2023：计分与封顶",
+      "keywords": [
+        "2023",
+        "计分",
+        "21分",
+        "30分",
+        "三局两胜"
+      ],
+      "answer": "按2023版通常采用三局两胜、每球得分；21分为一局目标，20平后须领先2分，29平后先得30分者胜。该版另列礼让和替换规则，不能把所有变式都按标准21分处理。",
+      "conditions": [
+        "依据2023年8月第1版经核验原页；用于当前赛事前核对后续中国羽协文件及赛事采用版本。"
+      ],
+      "review_status": "visually_verified",
+      "parameters": {
+        "mode": "points",
+        "best_of": 3,
+        "target": 21,
+        "win_by": 2,
+        "cap": 30
+      },
+      "citations": [
+        {
+          "source": "cba-book-2023",
+          "clause": "第一章 一、规则 7.1–7.6",
+          "pages": [
+            14
+          ],
+          "printed_pages": [
+            7
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cba-2023-toss",
+      "title": "中国羽协2023：挑边与选择权",
+      "keywords": [
+        "2023",
+        "挑边",
+        "掷硬币",
+        "先发球",
+        "选场地"
+      ],
+      "answer": "挑边胜方在先发/接发球与选择起始场区两类权利中选一项，负方在剩余一项中选择。胜方不能同时包揽两项。",
+      "conditions": [
+        "依据2023年8月第1版经核验原页；用于当前赛事前核对后续中国羽协文件及赛事采用版本。"
+      ],
+      "review_status": "visually_verified",
+      "citations": [
+        {
+          "source": "cba-book-2023",
+          "clause": "第一章 一、规则 6.1–6.2",
+          "pages": [
+            13,
+            14
+          ],
+          "printed_pages": [
+            6,
+            7
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cba-2023-interval",
+      "title": "中国羽协2023：换边与局内局间间歇",
+      "keywords": [
+        "2023",
+        "间歇",
+        "换边",
+        "11分",
+        "60秒",
+        "120秒"
+      ],
+      "answer": "按2023版，第一局结束、须打第三局时第二局结束，以及第三局一方先到11分时换边；漏换边在死球后纠正，比分保留。通常每局一方先到11分允许不超过60秒间歇，局间不超过120秒；特殊规则另核。",
+      "conditions": [
+        "依据2023年8月第1版经核验原页；用于当前赛事前核对后续中国羽协文件及赛事采用版本。"
+      ],
+      "review_status": "visually_verified",
+      "citations": [
+        {
+          "source": "cba-book-2023",
+          "clause": "第一章 一、规则 8；16.2",
+          "pages": [
+            14,
+            20
+          ],
+          "printed_pages": [
+            7,
+            13
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cba-2023-serve",
+      "title": "中国羽协2023：发球高度及旧版旋转发球证据边界",
+      "keywords": [
+        "2023",
+        "发球",
+        "1.15米",
+        "发球高度",
+        "旋转",
+        "加转"
+      ],
+      "answer": "2023版普通发球要求先击球托，击球瞬间整个球低于距地面1.15米；发接发者双脚均须有部分接地且不得移动，发球动作须连续向前。扫描页9.1.5没有后来释放球时不得主动加转的文字；不能据其缺文推断当前旋转发球合法。残疾人及替换发球规则另列。",
+      "conditions": [
+        "依据2023年8月第1版经核验原页；用于当前赛事前核对后续中国羽协文件及赛事采用版本。"
+      ],
+      "review_status": "visually_verified",
+      "citations": [
+        {
+          "source": "cba-book-2023",
+          "clause": "第一章 一、规则 9.1.3–9.1.8；9.2–9.5",
+          "pages": [
+            14,
+            15
+          ],
+          "printed_pages": [
+            7,
+            8
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cba-2023-service-net",
+      "title": "中国羽协2023：发球擦网与挂网",
+      "keywords": [
+        "2023",
+        "发球擦网",
+        "挂网",
+        "重发"
+      ],
+      "answer": "满足其他发球条件的球，擦网后落入正确接发球区并不自动重发。发出的球停网顶或过网后挂网为违例；发球已被回击后的对击中停网顶或过网挂网，一般重发，轮椅式比赛例外另核。",
+      "conditions": [
+        "依据2023年8月第1版经核验原页；用于当前赛事前核对后续中国羽协文件及赛事采用版本。"
+      ],
+      "review_status": "visually_verified",
+      "citations": [
+        {
+          "source": "cba-book-2023",
+          "clause": "第一章 一、规则 9.1；13.2.1–13.2.2；14.2.3",
+          "pages": [
+            14,
+            18,
+            19
+          ],
+          "printed_pages": [
+            7,
+            11,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cba-2023-singles",
+      "title": "中国羽协2023：单打发球区与发球权",
+      "keywords": [
+        "2023",
+        "单打",
+        "单双数",
+        "奇偶"
+      ],
+      "answer": "2023版单打中按发球员当前得分选发球区：零或偶数在右区，奇数在左区；回合胜方得分并取得或保留发球权。半场残疾人比赛另有规定。",
+      "conditions": [
+        "依据2023年8月第1版经核验原页；用于当前赛事前核对后续中国羽协文件及赛事采用版本。"
+      ],
+      "review_status": "visually_verified",
+      "citations": [
+        {
+          "source": "cba-book-2023",
+          "clause": "第一章 一、规则 10.1–10.3",
+          "pages": [
+            16
+          ],
+          "printed_pages": [
+            9
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cba-2023-doubles",
+      "title": "中国羽协2023：双打站位与发接发顺序",
+      "keywords": [
+        "2023",
+        "双打",
+        "站位",
+        "发球顺序",
+        "接发顺序"
+      ],
+      "answer": "双打按发球方分数奇偶从右/左区发球，由斜对角者接发；发球方赢回合后原发球员换区继续发球，接发方赢回合后成为发球方。发球权按首发者、首接者同伴、首发者同伴、首接者循环转移；每局起始可按11.6重新选本方首发/首接者。",
+      "conditions": [
+        "依据2023年8月第1版经核验原页；用于当前赛事前核对后续中国羽协文件及赛事采用版本。"
+      ],
+      "review_status": "visually_verified",
+      "citations": [
+        {
+          "source": "cba-book-2023",
+          "clause": "第一章 一、规则 11.1–11.6",
+          "pages": [
+            16,
+            17
+          ],
+          "printed_pages": [
+            9,
+            10
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cba-2023-service-error",
+      "title": "中国羽协2023：发球区错误",
+      "keywords": [
+        "2023",
+        "发球区错误",
+        "站错",
+        "顺序错误"
+      ],
+      "answer": "发接发顺序错误或在错误发球区发接发，发现后在死球时纠正，已得比分有效。发出的球被接发球员同伴击中则是13.2.3所列违例，不能混为单纯发球区纠错。",
+      "conditions": [
+        "依据2023年8月第1版经核验原页；用于当前赛事前核对后续中国羽协文件及赛事采用版本。"
+      ],
+      "review_status": "visually_verified",
+      "citations": [
+        {
+          "source": "cba-book-2023",
+          "clause": "第一章 一、规则 12.1–12.2；13.2.3",
+          "pages": [
+            17,
+            18
+          ],
+          "printed_pages": [
+            10,
+            11
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cba-2023-fault",
+      "title": "中国羽协2023：触网、过网击球与连击",
+      "keywords": [
+        "2023",
+        "触网",
+        "过网击球",
+        "连击",
+        "二次击球"
+      ],
+      "answer": "球仍在比赛进行中时，球拍、身体或衣服触网或其支撑物为违例。初始击球点须在击球者网这一侧，合法击球后随挥过网可允许；从网下侵入须结合妨碍或分散注意判断。同一次击球动作中球触拍框和拍弦面不按两次击球处理，同方两人先后击球属于违例。先确认球是否已死。",
+      "conditions": [
+        "依据2023年8月第1版经核验原页；用于当前赛事前核对后续中国羽协文件及赛事采用版本。"
+      ],
+      "review_status": "visually_verified",
+      "citations": [
+        {
+          "source": "cba-book-2023",
+          "clause": "第一章 一、规则 13.3.6–13.4.5；15",
+          "pages": [
+            18,
+            19,
+            20
+          ],
+          "printed_pages": [
+            11,
+            12,
+            13
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cba-2023-coaching",
+      "title": "中国羽协2023：指导与离场",
+      "keywords": [
+        "2023",
+        "指导",
+        "教练",
+        "离场",
+        "擦汗"
+      ],
+      "answer": "2023版允许在死球期间接受指导，但到运动员站好位置准备发球和接发球时停止。未获裁判员许可不得离场，未延误比赛和规定间歇等例外按16.5判断；不能自行申请任意时长的恢复体力休息。",
+      "conditions": [
+        "依据2023年8月第1版经核验原页；用于当前赛事前核对后续中国羽协文件及赛事采用版本。"
+      ],
+      "review_status": "visually_verified",
+      "citations": [
+        {
+          "source": "cba-book-2023",
+          "clause": "第一章 一、规则 16.4–16.5",
+          "pages": [
+            20,
+            21
+          ],
+          "printed_pages": [
+            13,
+            14
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cba-2023-appeal",
+      "title": "中国羽协2023：事实判决与规则申诉",
+      "keywords": [
+        "2023",
+        "申诉",
+        "司线",
+        "裁判长"
+      ],
+      "answer": "事实宣判一般由对应技术官员作最终裁决，明显错判和即时回放等例外按17.5处理。与规则有关的申诉可提交裁判长，须在下次发球前提出；若该场已结束，应在申诉方离场前提出。不能把规则申诉等同于任意推翻事实落点。",
+      "conditions": [
+        "依据2023年8月第1版经核验原页；用于当前赛事前核对后续中国羽协文件及赛事采用版本。"
+      ],
+      "review_status": "visually_verified",
+      "citations": [
+        {
+          "source": "cba-book-2023",
+          "clause": "第一章 一、规则 17.5–17.6.8",
+          "pages": [
+            21,
+            22
+          ],
+          "printed_pages": [
+            14,
+            15
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cba-2023-round-robin",
+      "title": "中国羽协2023：单循环场数与轮转",
+      "keywords": [
+        "2023",
+        "循环场数",
+        "轮转",
+        "同单位",
+        "分组人数"
+      ],
+      "answer": "单循环N个报名项需N(N−1)/2场；偶数N为N−1轮，奇数N为N轮。2023版给出按排名安排顺序的表，并允许1号位固定逆时针轮转法；奇数用轮空位补齐。正文要求同组同单位先赛；若赛事采用该条须记录规则来源。分组4至6个报名项是书中建议，不能据此把地方赛统一开赛门槛写死。",
+      "conditions": [
+        "依据2023年8月第1版经核验原页；用于当前赛事前核对后续中国羽协文件及赛事采用版本。"
+      ],
+      "review_status": "visually_verified",
+      "citations": [
+        {
+          "source": "cba-book-2023",
+          "clause": "第二章 二、比赛方法 1.1–1.2及注",
+          "pages": [
+            106,
+            107,
+            108
+          ],
+          "printed_pages": [
+            99,
+            100,
+            101
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cba-2023-ranking",
+      "title": "中国羽协2023：单项循环同分排名",
+      "keywords": [
+        "2023",
+        "同分",
+        "净胜局",
+        "净胜分",
+        "排名"
+      ],
+      "answer": "2023版单项循环先按获胜场数；只有两方同胜场时比较相互胜负。三方以上同胜场先比较该组比赛净胜局，若剩两方同值转相互胜负；仍三方以上同值再比较该组净胜分，再剩两方转相互胜负，仍三方以上同值则抽签。计算范围不能擅改为仅同分者互赛。",
+      "conditions": [
+        "依据2023年8月第1版经核验原页；用于当前赛事前核对后续中国羽协文件及赛事采用版本。"
+      ],
+      "review_status": "visually_verified",
+      "citations": [
+        {
+          "source": "cba-book-2023",
+          "clause": "第二章 二、比赛方法 1.3.1–1.3.4.2",
+          "pages": [
+            109
+          ],
+          "printed_pages": [
+            102
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cba-2023-withdrawal",
+      "title": "中国羽协2023：循环退赛与团体未完成",
+      "keywords": [
+        "2023",
+        "弃权",
+        "退赛",
+        "删除成绩",
+        "团体排名"
+      ],
+      "answer": "2023版第二章1.3.5列出团体按胜次、净胜场、净胜局、净胜分等顺序比较。其后针对世界羽联批准比赛的附加规定区分未完成全部循环赛与一场团体对抗中的某个子场未完成：前者有关全部成绩不计，后者按该子场规定及弃权时实际分数处理，不能不分层级地一律清零或填封顶比分。",
+      "conditions": [
+        "依据2023年8月第1版经核验原页；用于当前赛事前核对后续中国羽协文件及赛事采用版本。"
+      ],
+      "review_status": "visually_verified",
+      "citations": [
+        {
+          "source": "cba-book-2023",
+          "clause": "第二章 二、比赛方法 1.3.5及其后注（1）–（3）",
+          "pages": [
+            109,
+            110
+          ],
+          "printed_pages": [
+            102,
+            103
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cba-2023-seed",
+      "title": "中国羽协2023：种子与抽签变更",
+      "keywords": [
+        "2023",
+        "种子",
+        "重新抽签",
+        "抽签变更"
+      ],
+      "answer": "2023版种子确定以排名和技术水平为依据，并提示世界羽联、中国羽协另有规定。抽签结束原则上不改；对应项目开赛前的报名或抽签差错、书中定义的预赛严重失衡、无预赛正赛严重失衡等例外逐项核对，不能因希望换组而任意重抽。",
+      "conditions": [
+        "依据2023年8月第1版经核验原页；用于当前赛事前核对后续中国羽协文件及赛事采用版本。"
+      ],
+      "review_status": "visually_verified",
+      "citations": [
+        {
+          "source": "cba-book-2023",
+          "clause": "第二章 三、确定种子原则；五、抽签变更",
+          "pages": [
+            145
+          ],
+          "printed_pages": [
+            138
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cba-2023-schedule",
+      "title": "中国羽协2023：比赛负荷与场间休息",
+      "keywords": [
+        "2023",
+        "场间休息",
+        "编排",
+        "日程",
+        "60分钟",
+        "30分钟",
+        "每天场数"
+      ],
+      "answer": "2023版提倡合理负荷下提高场地利用率、缩短比赛天数。第二章六第4项列单项运动员每日总场数不超过6场、同项不超过3场；每节总场数不超过3场、同项不超过2场，第6项另有主办单位同意的特殊情形。第7项限定世界羽联批准赛事：成人场间至少60分钟，特殊情况下裁判长可缩至不少于30分钟；青年至少30分钟。是否适用于本场及后续修订须另核，不自动覆盖用户已确认的地方赛参数。",
+      "conditions": [
+        "依据2023年8月第1版经核验原页；用于当前赛事前核对后续中国羽协文件及赛事采用版本。"
+      ],
+      "review_status": "visually_verified",
+      "citations": [
+        {
+          "source": "cba-book-2023",
+          "clause": "第二章 六、竞赛日程安排 1–7",
+          "pages": [
+            146
+          ],
+          "printed_pages": [
+            139
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scoring-21",
+      "title": "21分制与2026赛事",
+      "keywords": [
+        "2026",
+        "15分",
+        "最新",
+        "新规则",
+        "计分",
+        "21分",
+        "三局两胜",
+        "20平",
+        "29平",
+        "比分",
+        "封顶"
+      ],
+      "answer": "BWF该版本标准为三局两胜，每球得分；20平后净胜2分，29平后先得30分胜。赢下一局的一方下一局先发球。已批准未来15分制不使本版本提前失效。",
+      "conditions": "标准羽毛球单、双打；先确认本场采用BWF规则及适用日期。",
+      "citations": [
+        {
+          "source": "bwf-laws-2025",
+          "clause": "7.1–7.6",
+          "pages": [
+            5
+          ]
+        }
+      ],
+      "parameters": {
+        "mode": "points",
+        "best_of": 3,
+        "target": 21,
+        "win_by": 2,
+        "cap": 30
+      }
+    },
+    {
+      "id": "scoring-15",
+      "title": "2027版15分制",
+      "keywords": [
+        "计分",
+        "15分",
+        "新规则",
+        "2027",
+        "14平",
+        "20平",
+        "封顶"
+      ],
+      "answer": "V6.0从2027-01-04生效：标准三局两胜、每局15分；14平后净胜2分，20平后先得21分胜。2026年赛事不能因该版已发布便自动改制。",
+      "conditions": "标准羽毛球单、双打；先确认本场采用BWF规则及适用日期。",
+      "citations": [
+        {
+          "source": "bwf-laws-2027",
+          "clause": "7.1–7.6",
+          "pages": [
+            5
+          ]
+        }
+      ],
+      "parameters": {
+        "mode": "points",
+        "best_of": 3,
+        "target": 15,
+        "win_by": 2,
+        "cap": 21
+      }
+    },
+    {
+      "id": "intervals-21",
+      "title": "21分制间歇与换边",
+      "keywords": [
+        "间歇",
+        "休息",
+        "换边",
+        "11分",
+        "暂停"
+      ],
+      "answer": "各局领先分到11时可间歇不超过60秒；局间不超过120秒。第一局后、需打第三局的第二局后换边；第三局一方先到11时换边。漏换边在死球时纠正，比分保留。",
+      "conditions": "标准21分比赛；让分赛等适用另行规定。局内、局间间歇不是两场比赛之间的休息。",
+      "citations": [
+        {
+          "source": "bwf-laws-2025",
+          "clause": "8.1–8.2；16.2",
+          "pages": [
+            5,
+            10
+          ]
+        }
+      ],
+      "parameters": {
+        "interval_at": 11,
+        "deciding_change_at": 11,
+        "interval_seconds": 60,
+        "between_games_seconds": 120
+      }
+    },
+    {
+      "id": "intervals-15",
+      "title": "15分制间歇与换边",
+      "keywords": [
+        "间歇",
+        "休息",
+        "换边",
+        "8分",
+        "15分"
+      ],
+      "answer": "2027版局内间歇触发分和第三局换边分改为8分；局内不超过60秒、局间不超过120秒。不能只修改目标分而保留11分触发。",
+      "conditions": "2027-01-04起按已公布V6.0的标准比赛；赛事日期及后续修订仍须核对。",
+      "citations": [
+        {
+          "source": "bwf-laws-2027",
+          "clause": "8.1–8.2；16.2",
+          "pages": [
+            5,
+            10
+          ]
+        }
+      ],
+      "parameters": {
+        "interval_at": 8,
+        "deciding_change_at": 8,
+        "interval_seconds": 60,
+        "between_games_seconds": 120
+      }
+    },
+    {
+      "id": "toss",
+      "title": "挑边的选择权",
+      "keywords": [
+        "挑边",
+        "掷币",
+        "先发球",
+        "选边"
+      ],
+      "answer": "获胜方选择先发/先接，或选择起始场区，两类权利选其一；对方选择剩余一类。不是赢方同时获得两类选择权。",
+      "conditions": "标准羽毛球单、双打；先确认本场采用BWF规则及适用日期。",
+      "citations": [
+        {
+          "source": "bwf-laws-2025",
+          "clause": "6.1–6.2",
+          "pages": [
+            5
+          ]
+        },
+        {
+          "source": "bwf-laws-2027",
+          "clause": "6.1–6.2",
+          "pages": [
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "id": "serve-height-spin",
+      "title": "发球高度与旋转",
+      "keywords": [
+        "发球",
+        "1.15",
+        "过腰",
+        "旋转",
+        "加转",
+        "球托",
+        "发球高度"
+      ],
+      "answer": "击球瞬间整个球须低于场地表面1.15米；释放球时不得人为加转，球拍先击中球托。“低于腰部”不能自动代替本版本标准高度。",
+      "conditions": "标准羽毛球发球；残疾人、获准替代发球法或赛事明确采用的变式须另查，不能从身高或是否配发球裁判推定豁免。",
+      "citations": [
+        {
+          "source": "bwf-laws-2025",
+          "clause": "9.1.5–9.1.6",
+          "pages": [
+            6
+          ]
+        },
+        {
+          "source": "bwf-laws-2027",
+          "clause": "9.1.5–9.1.6",
+          "pages": [
+            6
+          ]
+        }
+      ]
+    },
+    {
+      "id": "serve-feet",
+      "title": "发球脚步、连贯动作与准备",
+      "keywords": [
+        "发球",
+        "脚",
+        "踩线",
+        "移动",
+        "准备",
+        "偷发",
+        "空挥",
+        "停顿"
+      ],
+      "answer": "发接双方斜对角站位且不踩发球区界线；发球开始至发出期间双脚各有部分静止接触地面。前挥开始后动作应连续；试图发球而未击中也算发球结束。接发者已尝试接球即视为准备好。",
+      "conditions": "标准羽毛球单、双打；先确认本场采用BWF规则及适用日期。",
+      "citations": [
+        {
+          "source": "bwf-laws-2025",
+          "clause": "9.1.1–9.5",
+          "pages": [
+            5,
+            6
+          ]
+        },
+        {
+          "source": "bwf-laws-2027",
+          "clause": "9.1.1–9.5",
+          "pages": [
+            5,
+            6
+          ]
+        }
+      ]
+    },
+    {
+      "id": "singles-courts",
+      "title": "单打发球区",
+      "keywords": [
+        "单打",
+        "左右",
+        "单双数",
+        "发球区"
+      ],
+      "answer": "以发球方本局分数决定发球区：零或偶数右区，奇数左区。接发者站斜对角；接发方赢球得分并取得发球权。",
+      "conditions": "标准羽毛球单、双打；先确认本场采用BWF规则及适用日期。",
+      "citations": [
+        {
+          "source": "bwf-laws-2025",
+          "clause": "10.1–10.3",
+          "pages": [
+            6,
+            7
+          ]
+        },
+        {
+          "source": "bwf-laws-2027",
+          "clause": "10.1–10.3",
+          "pages": [
+            6,
+            7
+          ]
+        }
+      ]
+    },
+    {
+      "id": "doubles-order",
+      "title": "双打站位与发球顺序",
+      "keywords": [
+        "双打",
+        "发球顺序",
+        "接发球",
+        "站位",
+        "换位"
+      ],
+      "answer": "看发球方分数决定左右发球区；接发人为斜对角指定球员，搭档不能代接。只有本方发球并赢得一分才互换发球区。发球权依次在首发者、首接者搭档、首发者搭档、首接者之间轮转，不是失去一次发球权后同队再有第二发。",
+      "conditions": "标准羽毛球单、双打；先确认本场采用BWF规则及适用日期。",
+      "citations": [
+        {
+          "source": "bwf-laws-2025",
+          "clause": "11.1–11.6；13.2.3",
+          "pages": [
+            7,
+            8
+          ]
+        },
+        {
+          "source": "bwf-laws-2027",
+          "clause": "11.1–11.6；13.2.3",
+          "pages": [
+            7,
+            8
+          ]
+        }
+      ]
+    },
+    {
+      "id": "service-error",
+      "title": "发接次序或发球区错误",
+      "keywords": [
+        "发球区错误",
+        "顺序错误",
+        "站错",
+        "错区",
+        "发错",
+        "接错"
+      ],
+      "answer": "发现发接次序或发球区错误，在死球时纠正，已有比分保留；不要凭此把之前所有回合重赛，也不要与合法接发人的搭档击中发球混同。",
+      "conditions": "标准羽毛球单、双打；先确认本场采用BWF规则及适用日期。",
+      "citations": [
+        {
+          "source": "bwf-laws-2025",
+          "clause": "12.1–12.2；13.2.3",
+          "pages": [
+            8
+          ]
+        },
+        {
+          "source": "bwf-laws-2027",
+          "clause": "12.1–12.2；13.2.3",
+          "pages": [
+            8
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lines-court",
+      "title": "压线与单双打界线",
+      "keywords": [
+        "压线",
+        "界内",
+        "界外",
+        "场地",
+        "宽度",
+        "双打后发球线"
+      ],
+      "answer": "界线属于其界定区域，落在线上算界内；发球时脚不能踩发球区界线。单打与双打、双打发球后界与回合后界不同，按图A核对；场长13.40米，单打宽5.18米，双打宽6.10米。",
+      "conditions": "标准羽毛球单、双打；先确认本场采用BWF规则及适用日期。",
+      "citations": [
+        {
+          "source": "bwf-laws-2025",
+          "clause": "1.1–1.3及图A；9.1.3；13.3.1",
+          "pages": [
+            1,
+            2,
+            6,
+            8
+          ]
+        },
+        {
+          "source": "bwf-laws-2027",
+          "clause": "1.1–1.3及图A；9.1.3；13.3.1",
+          "pages": [
+            1,
+            2,
+            6,
+            8
+          ]
+        }
+      ]
+    },
+    {
+      "id": "service-net",
+      "title": "发球擦网和挂网",
+      "keywords": [
+        "发球擦网",
+        "擦网",
+        "挂网",
+        "停网",
+        "重发"
+      ],
+      "answer": "发球仅擦网后越网并落入正确接发球区，不因擦网自动重发，仍须满足其他合法发球条件；发球停在网顶或过网后挂在网上判违例。",
+      "conditions": "标准羽毛球单、双打；先确认本场采用BWF规则及适用日期。",
+      "citations": [
+        {
+          "source": "bwf-laws-2025",
+          "clause": "9.1；13.2.1–13.2.2",
+          "pages": [
+            5,
+            8
+          ]
+        },
+        {
+          "source": "bwf-laws-2027",
+          "clause": "9.1；13.2.1–13.2.2",
+          "pages": [
+            5,
+            8
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rally-net",
+      "title": "对打中停网与重发",
+      "keywords": [
+        "挂网",
+        "停网",
+        "重发",
+        "网顶"
+      ],
+      "answer": "发球已被回击后的对打，球停网顶或过网后挂网，标准规则判重发；不能把此规定套到发球阶段。轮椅羽毛球有不同处理。",
+      "conditions": "普通单、双打；需先确认是否已回击发球及是否为轮椅羽毛球。",
+      "citations": [
+        {
+          "source": "bwf-laws-2025",
+          "clause": "14.2.3–14.3；13.3.10",
+          "pages": [
+            9,
+            10
+          ]
+        },
+        {
+          "source": "bwf-laws-2027",
+          "clause": "14.2.3–14.3；13.3.10",
+          "pages": [
+            9,
+            10
+          ]
+        }
+      ]
+    },
+    {
+      "id": "net-touch",
+      "title": "触网与死球先后",
+      "keywords": [
+        "触网",
+        "碰网",
+        "死球",
+        "落地"
+      ],
+      "answer": "球仍在比赛中时，球拍、身体或衣服碰网或其支撑物是违例。判断先确认球何时已死；球落地后才碰网，不因这次碰网改判已经结束的回合，行为不端另论。",
+      "conditions": "标准羽毛球单、双打；先确认本场采用BWF规则及适用日期。",
+      "citations": [
+        {
+          "source": "bwf-laws-2025",
+          "clause": "13.4.1；15",
+          "pages": [
+            9,
+            10
+          ]
+        },
+        {
+          "source": "bwf-laws-2027",
+          "clause": "13.4.1；15",
+          "pages": [
+            9,
+            10
+          ]
+        }
+      ]
+    },
+    {
+      "id": "over-net",
+      "title": "过网击球与随挥",
+      "keywords": [
+        "过网击球",
+        "过网",
+        "随挥",
+        "伸拍",
+        "阻挡",
+        "网下"
+      ],
+      "answer": "初始击球接触点必须在击球者一侧；完成该次击球时球拍可随挥过网。网下侵入且造成妨碍/分心、阻碍对方合法随挥均另构成违例，不能说过网任何情况下都违例或都合法。",
+      "conditions": "标准羽毛球单、双打；先确认本场采用BWF规则及适用日期。",
+      "citations": [
+        {
+          "source": "bwf-laws-2025",
+          "clause": "13.4.2–13.4.5",
+          "pages": [
+            9
+          ]
+        },
+        {
+          "source": "bwf-laws-2027",
+          "clause": "13.4.2–13.4.5",
+          "pages": [
+            9
+          ]
+        }
+      ]
+    },
+    {
+      "id": "double-hit",
+      "title": "连击与一次挥拍",
+      "keywords": [
+        "连击",
+        "两次",
+        "双击",
+        "拍框",
+        "拍弦",
+        "持球"
+      ],
+      "answer": "同一人连续两次击球或同队两人连续击球为违例；一次击球动作中球先后碰拍框和拍弦不因此判连击。持住球再拖带抛出也另属违例。",
+      "conditions": "标准羽毛球单、双打；先确认本场采用BWF规则及适用日期。",
+      "citations": [
+        {
+          "source": "bwf-laws-2025",
+          "clause": "13.3.6–13.3.8",
+          "pages": [
+            9
+          ]
+        },
+        {
+          "source": "bwf-laws-2027",
+          "clause": "13.3.6–13.3.8",
+          "pages": [
+            9
+          ]
+        }
+      ]
+    },
+    {
+      "id": "let-dead",
+      "title": "重发与死球",
+      "keywords": [
+        "重发",
+        "死球",
+        "球托分离",
+        "看不清"
+      ],
+      "answer": "重发后该次发球以来的对打不计，由原发球者再发。球落地、发生违例/重发，或碰网/网柱后开始向击球者一侧落下时已死球；球托与其余部分完全分离等依重发条款处理。",
+      "conditions": "标准羽毛球单、双打；先确认本场采用BWF规则及适用日期。",
+      "citations": [
+        {
+          "source": "bwf-laws-2025",
+          "clause": "14.2.4–14.3；15",
+          "pages": [
+            10
+          ]
+        },
+        {
+          "source": "bwf-laws-2027",
+          "clause": "14.2.4–14.3；15",
+          "pages": [
+            10
+          ]
+        }
+      ]
+    },
+    {
+      "id": "appeals",
+      "title": "裁判分工与申诉时点",
+      "keywords": [
+        "申诉",
+        "争议",
+        "裁判长",
+        "司线",
+        "鹰眼",
+        "改判"
+      ],
+      "answer": "事实判定与规则解释分开：明显司线误判可由裁判员推翻，启用即时回放时按对应程序。规则解释异议可提交裁判长；通常应在下一次发球前，赛末则在申诉方离场前提出，不能把裁判长当任意重判落点的通道。",
+      "conditions": "标准羽毛球单、双打；先确认本场采用BWF规则及适用日期。",
+      "citations": [
+        {
+          "source": "bwf-laws-2025",
+          "clause": "17.1–17.6，特别17.5及17.6.8",
+          "pages": [
+            11,
+            12
+          ]
+        },
+        {
+          "source": "bwf-laws-2027",
+          "clause": "17.1–17.6，特别17.5及17.6.8",
+          "pages": [
+            11,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "id": "advice",
+      "title": "指导与离场",
+      "keywords": [
+        "教练",
+        "指导",
+        "离场",
+        "喝水",
+        "擦汗",
+        "拖延"
+      ],
+      "answer": "仅在死球期间且运动员尚未站好发接球位置时允许接受指导；不得为恢复体力或指导拖延比赛。非规定间歇中离场并造成延误须取得裁判员许可，死球不等于可无限暂停。",
+      "conditions": "标准羽毛球单、双打；先确认本场采用BWF规则及适用日期。",
+      "citations": [
+        {
+          "source": "bwf-laws-2025",
+          "clause": "16.4–16.5",
+          "pages": [
+            11
+          ]
+        },
+        {
+          "source": "bwf-laws-2027",
+          "clause": "16.4–16.5",
+          "pages": [
+            11
+          ]
+        }
+      ]
+    },
+    {
+      "id": "penalties",
+      "required_sources": ["bwf-itto-2025"],
+      "title": "黄红黑牌职责",
+      "keywords": [
+        "黄牌",
+        "红牌",
+        "黑牌",
+        "取消资格",
+        "处罚"
+      ],
+      "answer": "黄牌用于行为不端警告；红牌为判违例并立即报告裁判长，严重行为可直接判违例，不一定先黄牌。取消比赛资格由裁判长决定，裁判员按程序出示黑牌。",
+      "conditions": "标准羽毛球单、双打；先确认本场采用BWF规则及适用日期。",
+      "citations": [
+        {
+          "source": "bwf-itto-2025",
+          "clause": "5.17.3–5.17.5",
+          "pages": [
+            36,
+            37
+          ]
+        },
+        {
+          "source": "bwf-laws-2025",
+          "clause": "16.7",
+          "pages": [
+            11
+          ]
+        },
+        {
+          "source": "bwf-laws-2027",
+          "clause": "16.7",
+          "pages": [
+            11
+          ]
+        }
+      ]
+    },
+    {
+      "id": "injury",
+      "title": "伤病中断程序",
+      "keywords": [
+        "受伤",
+        "伤病",
+        "医疗",
+        "抽筋",
+        "流血",
+        "三分钟"
+      ],
+      "answer": "伤病由裁判员评估并视需要请裁判长/赛事医生处理、记录中断；不能据本指南宣称人人自动享有固定三分钟医疗暂停。流血和退赛按专门程序处理，不作医疗诊断或自动补终局比分。",
+      "conditions": "这里说明裁判程序；紧急医务、残疾人和赛事专项要求另查相应文件及现场专业人员意见。",
+      "citations": [
+        {
+          "source": "bwf-itto-2025",
+          "clause": "5.14.1–5.14.3",
+          "pages": [
+            35
+          ]
+        }
+      ]
+    },
+    {
+      "id": "equipment",
+      "title": "球拍与球网基本规格",
+      "keywords": [
+        "器材",
+        "球拍",
+        "球网",
+        "网高",
+        "重量"
+      ],
+      "answer": "标准网中央高1.524米、双打边线处高1.55米；球拍整体不超过680×230毫米。器材是否合规还涉及材料、结构和审批，不能仅凭长宽或品牌判断。",
+      "conditions": "标准羽毛球单、双打；先确认本场采用BWF规则及适用日期。",
+      "citations": [
+        {
+          "source": "bwf-laws-2025",
+          "clause": "1.4–1.10；4.1；5.1",
+          "pages": [
+            1,
+            3,
+            4
+          ]
+        },
+        {
+          "source": "bwf-laws-2027",
+          "clause": "1.4–1.10；4.1；5.1",
+          "pages": [
+            1,
+            3,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "id": "between-matches",
+      "required_sources": ["bwf-gcr-2026", "bwf-itto-2025"],
+      "title": "场间休息及新旧编号",
+      "keywords": [
+        "场间休息",
+        "两场",
+        "休息",
+        "连续",
+        "兼项",
+        "11.3",
+        "11.4",
+        "60分钟",
+        "30分钟"
+      ],
+      "answer": "GCR V8.0第11.4规定两场之间至少60分钟，特殊情况下裁判长可降至不少于30分钟。ITTO V8.0(2)第3.5.19.4仍引用旧GCR 11.3，并列青少年、青少年团体、残疾人和其他赛事资格赛的30分钟情形；专项适用性须另核。",
+      "conditions": "先确认赛事是否适用GCR及专项规程。休息从上一场结束算到下一场开始；不将该国际赛事规则自动套到所有地方赛。",
+      "citations": [
+        {
+          "source": "bwf-gcr-2026",
+          "clause": "1；11.4",
+          "pages": [
+            2,
+            26
+          ]
+        },
+        {
+          "source": "bwf-itto-2025",
+          "clause": "3.5.19.4–3.5.19.5",
+          "pages": [
+            17
+          ]
+        }
+      ]
+    },
+    {
+      "id": "group-ranking",
+      "title": "单项循环同分排序",
+      "keywords": [
+        "循环",
+        "排名",
+        "同分",
+        "净胜局",
+        "净胜分",
+        "小组"
+      ],
+      "answer": "按胜场数；两方同胜场看相互胜负。三方及以上依全组净胜局、再全组净胜分比较；各步若仅剩两方同分，转相互胜负，三方以上仍同则抽签。不是净胜率，也不是默认只统计同分者互赛。",
+      "conditions": "适用GCR的单项循环赛。团体按16.3另核；排名算法需支持比较后剩两方的特殊分支。",
+      "citations": [
+        {
+          "source": "bwf-gcr-2026",
+          "clause": "16.2.1–16.2.4.2",
+          "pages": [
+            34,
+            35
+          ]
+        }
+      ]
+    },
+    {
+      "id": "group-withdrawal",
+      "title": "循环退赛与成绩删除",
+      "keywords": [
+        "循环",
+        "退赛",
+        "弃权",
+        "删除成绩",
+        "未完赛",
+        "除名"
+      ],
+      "answer": "GCR单项循环中，选手/组合因伤病、取消资格、退赛等不能完成全部小组赛时，其组内全部成绩删除；比赛中途退赛也视为未完成。保留原始赛果及裁定记录，计算排名时排除，不是把所有剩余场次填成0:21。",
+      "conditions": "先确认GCR适用。团体整队未完成循环与队际内某一盘未完成不同，不套用同一种处理。",
+      "citations": [
+        {
+          "source": "bwf-gcr-2026",
+          "clause": "16.2.5；16.3.7–16.3.8",
+          "pages": [
+            35,
+            36
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seeds-byes",
+      "title": "种子、轮空与签位",
+      "keywords": [
+        "种子",
+        "轮空",
+        "签位",
+        "抽签"
+      ],
+      "answer": "1号种子在顶端、2号在底端；3–4号抽入剩余四分区、5–8号抽入剩余八分区等。非2次幂报名数需首轮轮空；具体种子数和轮空位置依GCR及技术图表，不能把本地固定排位算法直接称为完整BWF抽签算法。",
+      "conditions": "确认赛事等级、采用文件、报名数及世界排名基准；精确签位需另读Section 5.3.8，当前知识卡不是其图表替代。",
+      "citations": [
+        {
+          "source": "bwf-gcr-2026",
+          "clause": "11.5–11.11",
+          "pages": [
+            26,
+            27,
+            28
+          ]
+        }
+      ]
+    },
+    {
+      "id": "entry-separation",
+      "title": "成员协会回避与俱乐部回避",
+      "keywords": [
+        "回避",
+        "同俱乐部",
+        "同队",
+        "分散",
+        "分组"
+      ],
+      "answer": "GCR第11.12的Member指BWF成员协会，部分等级有同协会前两位分居上下半区等规定；不等于所有赛事同俱乐部必须绝对回避。资格赛名额及跨协会组合另有条件，地方单位均匀分组是本场确认的策略。",
+      "conditions": "区分成员协会、国家/地区、俱乐部和队伍；不以本库覆盖专项抽签图表。",
+      "citations": [
+        {
+          "source": "bwf-gcr-2026",
+          "clause": "定义Member；11.12–11.15",
+          "pages": [
+            1,
+            28
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cba-edition",
+      "title": "中国羽协2025规则书核验边界",
+      "keywords": [
+        "2025规则书",
+        "2025",
+        "中国羽协",
+        "中国羽毛球协会",
+        "最新",
+        "旋转",
+        "审定"
+      ],
+      "answer": "中国羽协2025-03-24公告说明已启动2025版翻译审定，主要对应BWF在2023年11月至2024年12月的更新，包含限制发球加转、医务、技术官员和通用竞赛规程等。本库未取得该书完整正文，不能给出未经核验的中文条款号或把最新BWF各文件视为该书逐条内容。",
+      "conditions": "这是版本与证据范围说明，不是2025书的具体判罚条款或正式生效令。",
+      "citations": [
+        {
+          "source": "cba-review-2025",
+          "clause": "正文第2–4段",
+          "pages": []
+        }
+      ]
+    },
+    {
+      "id": "cba-historical-score",
+      "title": "中国羽协公开简易版计分基础",
+      "keywords": [
+        "计分",
+        "21分",
+        "间歇",
+        "换边",
+        "2022",
+        "简易版"
+      ],
+      "answer": "中国羽协2022简易版列三局两胜、21分、20平净胜2、29平到30；11分局内间歇不超过60秒，局间不超过120秒。它是历史公开摘要，不能独立证明2026或2027的国内赛事最新采用办法。",
+      "conditions": "仅作为2022发布的中文简易说明；当用户问现行中国羽协标准时，应取得对应正式版及赛事采用信息。",
+      "citations": [
+        {
+          "source": "cba-simple-2022",
+          "clause": "三 计分方法；四 交换场区及注",
+          "pages": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cba-historical-service",
+      "title": "中国羽协简易版发球及常见判罚定位",
+      "keywords": [
+        "发球",
+        "1.15",
+        "旋转",
+        "压线",
+        "连击",
+        "触网",
+        "过网",
+        "重发",
+        "简易版"
+      ],
+      "answer": "简易版第五部分列1.15米、双脚与发球区要求；第八部分列错区纠正保留比分，第九至十一部分列违例、重发和死球。此处章节号是简易版自有编号，不是BWF编号；2022文本未含后续全部修订，尤其不能据未写加转推出允许加转。",
+      "conditions": "历史中文索引；具体当前判罚须回到已确认采用的正式规则。",
+      "citations": [
+        {
+          "source": "cba-simple-2022",
+          "clause": "五；八至十一",
+          "pages": [
+            2,
+            3,
+            4,
+            5
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -2,6 +2,8 @@
 
 依据 2026-10-06 客户端 `app.60686ba611d579bcc83d.js` 与实际提交、后台及公开端回读。已验收图片上传、既有赛事编辑、SSGC规程与SSZN通知保存、ISZXC秩序册与ISJMD节目单发布、指定项目完整`saveSet`保存及已知报名原值恢复，以及两个小节的场序分配和手机端开放。该证据不覆盖ADD新建、其他内容/报表类型、裁判端或出场名单端开启；这些仍须按具体任务执行并核验。获授权的任务沿用授权范围，不把本地预案成功说成线上成功。`ptty_readonly.mjs` 始终只读。
 
+2026-10-07补充：新版`app.1073f5c6401c322ed993.js`已实际ADD一个隔离合成赛事，同名全量查询确认新增唯一对象；表单`QSLXID:"1"`与当前羽毛球枚举一致，列表及编辑回读却为`"0"/乒乓球`。完整页面表单UPT返回成功仍未修正。用户允许不影响功能的异常保留后，继续完成4人淘汰流程验证，详见[流程验收](recovery-and-testing.md#流程与意图回归)。其中小节先只开放手机端，再开放裁判/控场端，均检查其余开关不变；未验证实际微信裁判操作或出场名单端开启。原始运动差异仍存在；其他操作不因此自动通过，按[运动身份例外](website.md#运动身份检查)限定范围。
+
 ## 先分清目标
 
 |用户要做的事|实际载体|
@@ -24,6 +26,8 @@
 6. 图片选择会立即上传到`trialUploadImage`。成功的`content.filePath/filePath_ys/url`分别进入表单图片记录`IMGPATH/IMGPATH_YS/url`；不要伪造路径。上传成功不等于已绑定赛事。提交表单前用当前数据保存其余字段；提交后只读`getSsList/getEditor`核对新SSID、名称日期场地与图片，再看客户端显示。
 
 创建请求合同：`headerData:{ssid:"",op:"ssGl",methodName:"insertOrUpdateOrDeleteSs"}`，`busData`为完整表单，`TYPE:"ADD",SSID:"ADD"`；编辑用`TYPE:"UPT"`与真实SSID。`CDS`由场地号组成带尾逗号的文本。`ssGl/getCityList`读取区域选项；`ssGl/getEditor`的`busData:{ssid:明文赛事ID}`读取既有完整表单。只读调查不调用创建权限检查、提交或上传来“试试看”。
+
+`getEditor`原始响应不是可直接重交的页面表单：实际编辑器会补充`cityId`等字段，提交前按当前编辑器转换核对完整模型。字段补齐只能修复请求形状，不代表运动身份异常已解决；以回读值为准。
 
 ## 富文本规程与补充通知
 
@@ -88,7 +92,22 @@ python scripts/publication_packet.py validate 新发布包目录/publication-pac
 
 顶层：`schema_version:1,event:{id,name,sport},source_version,baseline,assets,operations`。新建时id为空且仅做create_event；创建回读取得真实ID后再准备内容与发布包。既有赛事baseline含同一`event_id`、`captured_at`，按操作加入`client`（mainLoadData原content）、`event`（getEditor原content）、`sections`（getXjs的listXj）、`scene_numbers`（实际CXH整数）。快照用于生成预案，实际执行前再刷新比较，哈希并不代替授权或实时一致性检查。
 
-执行前补充`sport_identity`：`{source:"current_page",captured_at:"实际采集时间",page_url:"https://www.ptty.com.cn/#/实际路由",module_sport:"badminton",selected_id:"页面选中的值",options:[{id:"页面选项值",label:"羽毛球",sport:"badminton"}]}`。记录当前真实选项，`page_url`只保留无查询参数的页面路由。已有赛事`baseline.event.QSLXID`或新建`fields.QSLXID`必须与选中值相同；已读取的`QSLXMC`不能与任务运动矛盾。缺此证据的预案标记`unverified/write_blocked`，只能继续本地准备；已提供且一致标`observed_consistent/requires_live_recheck`，执行前仍需实时核对。校验输出明确列出`sport_write_blocked`，不把`valid:true`当作允许线上写入。
+执行前补充`sport_identity`：`{source:"current_page",captured_at:"实际采集时间",page_url:"https://www.ptty.com.cn/#/实际路由",module_sport:"badminton",selected_id:"页面选中的值",options:[{id:"页面选项值",label:"羽毛球",sport:"badminton"}]}`。记录当前真实选项，`page_url`只保留无查询参数的页面路由。默认要求已有赛事`baseline.event.QSLXID`或新建`fields.QSLXID`与选中值相同，`QSLXMC`与任务运动一致；已有赛事已核实的显示缺陷可使用下述例外。缺少现场证据的预案标记`unverified/write_blocked`；一致时标`observed_consistent/requires_live_recheck`。`valid:true`不表示允许线上写入。
+
+元数据例外：在`sport_identity`加入实际`client_sha256`及`metadata_exception`：
+
+```json
+{
+  "event_id": "SYNTHETIC-EVENT", "user_authorized": true,
+  "observed": {"QSLXID": "原始异常代码", "QSLXMC": "原始异常标签"},
+  "client_sha256": "与现场证据相同的64位小写SHA256",
+  "verified_operations": ["materials_all"],
+  "reason": "具体缺陷及不影响本次操作的依据",
+  "evidence_reference": "赛事工作区/本次功能回读记录.json"
+}
+```
+
+上例是字段说明，须换成实际证据。`verified_operations`使用本表的`operation.kind`，只列已实际验证的功能；不能因方案或名单导入成功就填写内容发布也已验证。用户已接受当前缺陷时沿用授权，不重复要求确认。工具核对赛事、原始异常、客户端哈希及操作范围，输出`accepted_metadata_exception`，仍要求实时复核。例外不适用于新建表单、缺失代码、错误模块/选项，也不修改原始回读。工具无法独立证明证据真实性。尚未验证的下一步只能在用户授权的隔离测试范围内逐步实测，不能借用该例外直接认定正常。
 
 |operation.kind|字段|
 |---|---|
