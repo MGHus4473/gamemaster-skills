@@ -6,7 +6,7 @@
 
 | 阶段 | 工作与输出 |
 | --- | --- |
-| 规程与规则 | 区分必填信息、补充条款与可选表述；生成规程、补充通知和规则解读 |
+| 规程与规则 | 默认单位正式文件风格；内置规程和补充通知内容模板，校验年龄日期、人数单位、计分晋级和并组变更；支持规则解读 |
 | 报名与名单 | 整理表格、文档、文字及可识别图片；保留原件来源、增补和身份映射；输出模板名单 |
 | 报名调整 | 保留原报名与最终比赛的对应关系；按确认方案并组、转项、取消组别和配置让分 |
 | 预留名额 | 估算增加名额对容量与场数的影响；预留项不充当真实运动员，替换后复核 |
@@ -51,7 +51,8 @@ python scripts/check_runtime.py --feature docx
 智能体按参考文档生成并校验结构化输入，再调用工具。例如：
 
 ```bash
-python scripts/render_regulations.py 规程.json --format docx --output 规程-v1.docx
+python scripts/regulation_content.py build 规程参数.json 规程-v1
+python scripts/render_regulations.py 规程-v1/document.json --format docx --output 规程-v1.docx
 python scripts/participant_roster.py export 名单.json 名单.xlsx
 python scripts/schedule_engine.py 编排输入.json 编排结果.json
 python scripts/results_engine.py 含真实赛果的对阵.json --output 成绩-v1
@@ -60,6 +61,8 @@ python scripts/results_engine.py 含真实赛果的对阵.json --output 成绩-v
 示例输入与输出路径应替换为赛事工作区中的实际路径，输出使用新版本。完整流程见 [文件工作流](references/file-workflow.md)；各脚本的输入结构见对应参考与 `--help`。
 
 ## 格式与算法边界
+
+规程先按 [内容模板与校验](references/regulation-content.md) 整理事实，再排版。U7/U10须明确本届含义、出生日期和年龄口径，不能单凭标签推定资格；补充通知明确原文件版本、调整前后和受影响事项。结构化内容检查不等于自由文本、资料真实性或规则适用性全部通过。
 
 Word 默认 A4、四边 25 mm 页边距、宋体正文、黑体标题、Times New Roman 西文；正文 12 pt、首行缩进 2 字符、1.5 倍行距。分级标题、条目悬挂缩进、表头重复、表格防跨页断行、附件和页码有独立规范，可用样式配置覆盖。详见 [Word 排版](references/word-formatting.md) 与 [文档输出](references/regulation-output.md)。
 

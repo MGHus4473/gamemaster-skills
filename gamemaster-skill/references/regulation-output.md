@@ -16,6 +16,8 @@
 
 ## 内容JSON
 
+新规程和补充通知先按 [内容模板与校验](regulation-content.md) 填写业务参数，使用 `regulation_content.py check/build` 产生下述排版 JSON。两层文件分开：内容编译器检查声明的年龄、单位、计分和变更；排版器检查块结构、占位符及格式。二者都不能替代原始依据和自由文本核对。
+
 `scripts/render_regulations.py` 接收内部排版中间文件，不让用户手填。保持原有 `title/status/pending/sections[].heading/blocks[]` 合同兼容；旧块为 `paragraph` 与 `table`。
 
 ```json

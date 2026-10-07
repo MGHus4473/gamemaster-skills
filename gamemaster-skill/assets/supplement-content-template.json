@@ -1,0 +1,11 @@
+{
+  "kind": "supplement", "status": "draft",
+  "event": {"name": null, "issuer": null, "version": null, "published": null},
+  "base_document": {"title": null, "version": null, "published": null},
+  "effective_at": null, "scope": null, "reason": null,
+  "subject": "有关事项", "recipients": null,
+  "changes": [],
+  "impacts": {"eligibility": null, "fees_refunds": null, "schedule": null, "scoring": null, "awards": null, "draw": null},
+  "response_window": null, "contact": null,
+  "mapping": [], "affected_source_ids": [], "extra_clauses": []
+}

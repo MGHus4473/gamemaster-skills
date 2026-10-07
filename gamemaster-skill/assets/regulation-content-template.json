@@ -1,0 +1,20 @@
+{
+  "kind": "regulations",
+  "status": "draft",
+  "event": {
+    "name": null, "sport": null, "organizer": null, "issuer": null,
+    "version": null, "published": null, "start": null, "end": null,
+    "venue": null, "address": null, "contact": null,
+    "registration_open": null, "registration_close": null, "registration_channel": null
+  },
+  "max_entries_per_person": null,
+  "policies": {
+    "eligibility": null, "entry_limits": null, "refunds": null,
+    "draw_schedule": null, "check_in": null, "withdrawal": null,
+    "appeals": null, "safety": null, "changes": null,
+    "equipment": null, "rule_basis": null
+  },
+  "groups": [],
+  "age_partitions": [],
+  "extra_clauses": []
+}

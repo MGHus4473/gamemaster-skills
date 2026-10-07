@@ -10,7 +10,7 @@ description: 制作或核对羽毛球、乒乓球、网球、匹克球赛事的�
 
 根据任务进入所需阶段，复用已有资料，只询问影响当前结果的缺项。业务确认不因某个JSON布尔值自动成立。
 
-1. **规程与规则**：读 [规程制定](references/regulations.md)，确认项目、资格、日期场地、计分晋级及奖项；按 [专业表述](references/regulation-language.md) 统一条款和计量单位。运动差异和规则解读读 [运动规则](references/sport-rules.md)。离线依据用户提供或已核验版本，不声称掌握当前最新规则。
+1. **规程与规则**：读 [规程制定](references/regulations.md) 及 [内容模板与校验](references/regulation-content.md)，默认采用单位正式文件风格，按本届已确认参数生成规程或补充通知，再审查内容及输出格式。涉及U组、年龄或组合资格另读 [组别设计](references/age-group-design.md)，明确出生日期边界与计算口径；润色不改业务事实。表述按 [专业表述](references/regulation-language.md)，技术判罚按 [运动规则](references/sport-rules.md) 核验；离线不声称掌握最新规则。
 2. **报名与调整**：读 [参赛名单](references/participant-roster.md)，接收表格、文字、文档或可辨认图片，保留来源与增补记录。报名与竞赛组不符时读 [并组与转项](references/registration-transition.md)；需要补录空间时读 [预留与替换](references/reserved-entries.md)。常用开赛建议8人，具体人/对/队门槛、并组及让分由本场确认，预留不凑真实人数。
 3. **竞赛方案**：读 [竞赛方案](references/competition-plan.md)，按最终真实项＋确认预留项核对分组、晋级、名次赛和容量；未定关键参数不输出正式方案。
 4. **抽签与对阵**：读 [独立抽签](references/draw.md) 和 [比赛结构](references/brackets.md)，使用本地ID、明确种子/轮空规则及单位回避。保留随机种子、签位、前场胜负或小组名次来源，不调用外部系统生成对阵。
