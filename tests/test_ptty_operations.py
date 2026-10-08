@@ -21,6 +21,16 @@ class OperationTests(unittest.TestCase):
         ids = {x["id"] for x in ops.search(self.catalog, "比分")}
         self.assertTrue({"live.score", "live.clear_score"} <= ids)
 
+    def test_switch_user_intent_finds_event_filter_without_account_write(self):
+        ids = {x['id'] for x in ops.search(self.catalog, '切换用户')}
+        self.assertIn('events.list', ids)
+        self.assertEqual(ops.resolve(self.catalog, 'events.list')['kind'], 'read')
+
+    def test_event_user_filter_is_available_in_readonly_mode(self):
+        step = self.step('events.list', mode='readonly', facts={'role_access': True})
+        self.assertEqual(step['blocked_by'], [])
+        self.assertEqual(step['evidence'], 'readonly')
+
     def test_substitute_search_and_missing_current_entry_require_readback(self):
         self.assertIn('roster.edit', {x['id'] for x in ops.search(self.catalog, '替补')})
         self.assertIn('roster_current_entry_verified', self.step('roster.edit', mode='requested_changes')['facts_to_read'])

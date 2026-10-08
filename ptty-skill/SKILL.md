@@ -19,6 +19,7 @@ description: 操作跑兔体育（ptty.com.cn）的赛事、报名、抽签、�
 |任务|参考与工具|
 |---|---|
 |网站入口、登录、手机页异常、运动类型冲突与脱敏|[网站与运动身份](references/website.md)|
+|切换账号下的用户、按创建人找赛事、查询全部用户赛事|[用户筛选与赛事检索](references/event-user-filter.md)，`scripts/ptty_events.mjs`|
 |找入口、消除歧义、判断变更影响、识别模拟页面|[操作目录](references/operation-map.md)、[意图与状态](references/intent-and-state.md)，`scripts/operation_catalog.py` 离线检索及预检|
 |字段合同、临场变更、部分成功/超时恢复、任务范围及流程回归|[恢复与验收](references/recovery-and-testing.md)，`scripts/task_contract.py`、`scripts/workflow_state.py` 离线检查|
 |报名设置、并组名单、方案、抽签、赛程和编排|[平台流程](references/platform-workflow.md)|

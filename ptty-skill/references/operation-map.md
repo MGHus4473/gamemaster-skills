@@ -33,7 +33,7 @@ python scripts/operation_catalog.py preflight 赛事工作区/操作预检.json
 
 |入口|任务与需要的参考|
 |---|---|
-|`/trialMainNavIndex`、`/index`|运动模块、赛事查询、创建/编辑/复制/删除；[网站身份](website.md)、[创建发布](publication.md)|
+|`/trialMainNavIndex`、`/index`|运动模块、[切换用户和赛事检索](event-user-filter.md)、创建/编辑/复制/删除；[网站身份](website.md)、[创建发布](publication.md)|
 |`/trialReportIndex`|报名组别、资格限项、费用、人员/单位/项目/团体、白黑名单、会员优惠、交易；[现场操作](live-operations.md)|
 |`/trialGhIndex`、`/trialRmdGlIndex`|竞赛方案、阶段计分排名、人数同步、最终名单及锁定；[平台流程](platform-workflow.md)|
 |`/trialScGlIndex`、`/trialCqIndex`|生成或重置比赛场次、分组容量、种子和签位；[平台流程](platform-workflow.md)、[文件交接](handoff.md)|

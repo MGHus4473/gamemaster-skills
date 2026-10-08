@@ -239,7 +239,7 @@
     },
     {
       "id": "events.list",
-      "title": "查询筛选赛事",
+      "title": "切换用户与查询赛事（账号下用户、创建人或全部用户）",
       "kind": "read",
       "methods": [
         "getSsList"
@@ -248,8 +248,8 @@
         "role_access"
       ],
       "impacts": [],
-      "acceptance": "赛事ID名称运动和分页总数",
-      "evidence": "static"
+      "acceptance": "按当前可见RYDMLIST选项设置search.rybh并重置第1页，执行getSsList；回读选中标签、筛选值、赛事RYBH归属与分页总数，保持登录身份。使用ptty_events.mjs；这不是账号登录切换或赛事归属转移",
+      "evidence": "readonly"
     },
     {
       "id": "events.create",

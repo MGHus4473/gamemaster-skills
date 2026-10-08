@@ -1,5 +1,7 @@
 # 报表、接口观察与只读工具
 
+尚未进入赛事、需要切换“用户”或跨用户找赛事时，先用[用户筛选工具](event-user-filter.md)。本页工具要求已进入明确赛事，不承担账号下赛事列表筛选。
+
 `scripts/ptty_readonly.mjs` 通过已有浏览器 CDP 会话在当前页面读数或下载。Node.js 22+；会话 JSON 仅需 `pageSocket`，通过 `--session` 显式传入。它不负责登录，不保存 Cookie，不接受任意 JavaScript 或任意 API 名称。只允许`https://www.ptty.com.cn/`后台应用（默认HTTPS端口、无URL账号密码），并以明文赛事 ID 核对页面。网站与运动模块检查见[网站信息](website.md)。
 
 ```bash
