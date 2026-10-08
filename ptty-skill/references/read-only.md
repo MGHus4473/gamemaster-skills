@@ -31,6 +31,8 @@ node scripts/ptty_readonly.mjs --session /secure/browser-session.json --event SS
 
 ## 出单管理
 
+赛事编排页的“下载编排信息”与本节出单管理报表不同：前者依赖已生成的场地网格。出现“编排数据不存在”时，按[下载前检查](platform-workflow.md#下载编排信息前的场地数据检查)区分空网格与读取失败；只读下载不自动调用写接口生成场地数据。
+
 |报表|当前方法名|用途|
 |---|---|---|
 |名单公示|getMdGs|对外名单；包含所选项目/阶段，不能直接去重当原报名总人数|

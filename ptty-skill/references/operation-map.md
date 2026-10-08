@@ -1,6 +1,6 @@
 # 跑兔操作目录
 
-本目录将用户意图映射到业务入口、读写性质和验收。机器目录 [operations.json](operations.json) 记录31个功能域、109类操作；它是导航与预检知识，不是可直接执行的后端SDK。先检索，按结果读取相关参考，不必一次加载全目录。
+本目录将用户意图映射到业务入口、读写性质和验收。机器目录 [operations.json](operations.json) 记录31个功能域、111类操作；它是导航与预检知识，不是可直接执行的后端SDK。先检索，按结果读取相关参考，不必一次加载全目录。
 
 ## 查找与预检
 
@@ -37,7 +37,7 @@ python scripts/operation_catalog.py preflight 赛事工作区/操作预检.json
 |`/trialReportIndex`|报名组别、资格限项、费用、人员/单位/项目/团体、白黑名单、会员优惠、交易；[现场操作](live-operations.md)|
 |`/trialGhIndex`、`/trialRmdGlIndex`|[首次生成比赛场次](match-generation.md)、竞赛方案、阶段计分排名、人数同步、最终名单及锁定；[平台流程](platform-workflow.md)|
 |`/trialScGlIndex`、`/trialCqIndex`|查询、删除或重置已有比赛场次、分组容量、种子和签位；[平台流程](platform-workflow.md)、[文件交接](handoff.md)|
-|`/trialSsBpIndex`|网格/场序、自动或自定义编排、移动、清空、小节；[平台流程](platform-workflow.md)、[小节发布](publication.md)|
+|`/trialSsBpIndex`|下载编排信息前先查场地数据：首次空网格用`schedule.grid_initialize`，回读后用`schedule.export`；编排、移动、清空、小节；[平台流程](platform-workflow.md)、[小节发布](publication.md)|
 |`/aiSchedulePage`、`/trialAiGlIndex`、`/chatBotIndex`|AI候选、应用结果、知识库案例、AI聊天/创建；计算与保存分开|
 |`/trialScreenSet`|各端控制、小节开放、通知、二维码、签名和弃权等设置；[现场操作](live-operations.md)、[二维码](qr-codes.md)|
 |`/qdGlIndex`、`/trialKongChangGlIndex`|签到、控场、调场、团体名单、比分、弃权、呼叫；[现场操作](live-operations.md)|

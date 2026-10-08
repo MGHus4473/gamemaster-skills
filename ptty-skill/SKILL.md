@@ -23,7 +23,7 @@ description: 操作跑兔体育（ptty.com.cn）的赛事、报名、抽签、�
 |找入口、消除歧义、判断变更影响、识别模拟页面|[操作目录](references/operation-map.md)、[意图与状态](references/intent-and-state.md)，`scripts/operation_catalog.py` 离线检索及预检|
 |字段合同、临场变更、部分成功/超时恢复、任务范围及流程回归|[恢复与验收](references/recovery-and-testing.md)，`scripts/task_contract.py`、`scripts/workflow_state.py` 离线检查|
 |已有签位但没有场次、首次生成比赛后编排|[首次场次生成](references/match-generation.md)，`scripts/prepare_match_generation.py`；先用`ptty_readonly.mjs --action matches`全量复查；确无场次且无签位才在竞赛方案页首次生成，不删签绕过保护|
-|报名设置、并组名单、方案、抽签、赛程和编排|[平台流程](references/platform-workflow.md)|
+|报名设置、并组名单、方案、抽签、赛程和编排|[平台流程](references/platform-workflow.md)；下载编排信息前先检查场地数据，缺失时按[首次网格初始化](references/platform-workflow.md#下载编排信息前的场地数据检查)生成并回读|
 |创建表单、赛事图片、规程/补充通知、报表可见性、小节分配和各端发布|[创建与发布](references/publication.md)，`scripts/publication_packet.py`离线准备与校验|
 |独立计算结果上传、平台 ID 绑定、导入边界|[交接与身份映射](references/handoff.md)|
 |成绩、名单、抽签、秩序册及场序表下载|[报表与只读工具](references/read-only.md)，`scripts/ptty_readonly.mjs`|

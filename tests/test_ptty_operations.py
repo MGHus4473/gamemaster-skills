@@ -116,6 +116,53 @@ class OperationTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 ops.preflight(self.catalog, {"operations": ids})
 
+    def test_empty_grid_requires_initialization_before_export_and_import(self):
+        for name in ('schedule.export', 'schedule.import'):
+            facts = {k: True for k in ops.resolve(self.catalog, name)['requires']}
+            facts['grid_present'] = False
+            step = self.step(name, mode='requested_changes', facts=facts)
+            self.assertEqual(step['failed_facts'], ['grid_present'])
+            self.assertEqual(step['next_step'], 'resolve_block')
+
+    def test_unknown_grid_is_read_before_download_not_assumed_empty(self):
+        step = self.step('schedule.export', facts={'target_identity': True, 'role_access': True})
+        self.assertEqual(step['facts_to_read'], ['grid_present'])
+        self.assertEqual(step['failed_facts'], [])
+        self.assertEqual(step['next_step'], 'read_missing_facts')
+
+    def test_first_grid_initialization_requires_complete_empty_state_and_policy(self):
+        name = 'schedule.grid_initialize'
+        baseline = {k: True for k in ops.resolve(self.catalog, name)['requires']}
+        for key in ('schedule_state_complete', 'grid_absent', 'scheduled_matches_absent', 'time_court_policy'):
+            for value in (False, None):
+                with self.subTest(key=key, value=value):
+                    step = self.step(name, mode='requested_changes', facts={**baseline, key: value})
+                    self.assertNotEqual(step['next_step'], 'verify_current_form_and_task_scope')
+                    self.assertIn(key, step['failed_facts'] if value is False else step['facts_to_read'])
+
+    def test_initialize_readback_download_then_reuse_existing_grid(self):
+        name = 'schedule.grid_initialize'
+        facts = {k: True for k in ops.resolve(self.catalog, name)['requires']}
+        facts['grid_present'] = False
+        first = self.step(name, mode='requested_changes', facts=facts)
+        self.assertEqual(first['next_step'], 'verify_current_form_and_task_scope')
+        # A fresh readback observes the created grid; preflight itself never mutates facts.
+        self.assertFalse(facts['grid_present'])
+        current = {**facts, 'grid_absent': False, 'grid_present': True}
+        self.assertEqual(self.step('schedule.export', facts=current)['next_step'],
+                         'verify_current_form_and_task_scope')
+        self.assertEqual(self.step(name, mode='requested_changes', facts=current)['failed_facts'],
+                         ['grid_absent'])
+
+    def test_readonly_download_does_not_authorize_initialization(self):
+        name = 'schedule.grid_initialize'
+        facts = {k: True for k in ops.resolve(self.catalog, name)['requires']}
+        self.assertIn('outside_readonly_scope', self.step(name, mode='readonly', facts=facts)['blocked_by'])
+        result = ops.preflight(self.catalog, {'operations': ['schedule.export'],
+                                             'facts': {'grid_present': False}})
+        self.assertEqual([s['operation'] for s in result['steps']], ['schedule.export'])
+        self.assertFalse(result['execution_authorized'])
+
     def test_facts_are_not_free_text_or_truthy_strings(self):
         for facts in ({"target_identity": "true"}, {"role_access": 1}, {"invented": True}, []):
             with self.assertRaises(ValueError):
