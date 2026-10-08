@@ -1134,6 +1134,7 @@
       "title": "首次生成场地数据（空编排网格）",
       "kind": "write",
       "methods": [
+        "createBpHandler（生成场地数据按钮）",
         "createBp"
       ],
       "requires": [
@@ -1148,7 +1149,7 @@
         "schedule",
         "sections"
       ],
-      "acceptance": "回读日期时段场地间隔；原CCH签位依赖及已编排数不变，再下载编排信息",
+      "acceptance": "赛事编排数据标签点击生成场地数据，处理原生确认框，回读网格；原CCH签位依赖及已编排数不变后下载",
       "evidence": "write_readback"
     },
     {
