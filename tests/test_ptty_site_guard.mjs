@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
-import {assertAdminLocation, assertPageForAction, validatePublicEventUrl, expression, decodeFile} from '../ptty-skill/scripts/ptty_readonly.mjs';
+import {assertAdminLocation, assertPageForAction, validatePublicEventUrl, expression, decodeFile, qrNavigationExpression, validateOptions} from '../ptty-skill/scripts/ptty_readonly.mjs';
 
 // File signatures only: image decoding and real scans are separate acceptance steps.
 const pngSignature = Buffer.from([137,80,78,71,13,10,26,10]);
@@ -144,4 +144,61 @@ test('report restores tab, selections and shared request on every exit', async (
     assert.equal(v.activeName, 'prior-report'); assert.deepEqual(v.xmids, ['prior-project']);
     assert.equal(v.utilPost.paramData, original);
   }
+});
+
+test('QR navigation from a publication page keeps event and makes no business writes', async () => {
+  const context = qrContext(publicUrl), target = context.document.querySelectorAll()[0].__vue__;
+  let current, requests = 0, navigation = 0;
+  target.utilPost.sendPost = async function () {
+    requests++; assert.equal(this.paramData.headerData.methodName, 'generateQrCode');
+    return {isSuccess: true, content: {url: publicUrl, qrCodeBase64: 'synthetic'}};
+  };
+  context.location = {...location, hash: '#/trialClientSet?ssid=SYNTHETIC'};
+  current = {ssid: 'SYNTHETIC', $router: {push: async destination => {
+    navigation++; assert.equal(destination.path, '/trialScreenSet'); assert.equal(destination.query.ssid, 'SYNTHETIC');
+    context.location.hash = '#/trialScreenSet?ssid=SYNTHETIC'; current = target;
+  }}};
+  context.document.querySelectorAll = () => [{__vue__: current}];
+  const options = {event, action: 'qr', kind: 'event', navigate: true};
+  const nav = await vm.runInNewContext(qrNavigationExpression(options), context);
+  assert.equal(nav.navigation_only, true); assert.equal(requests, 0);
+  const result = await vm.runInNewContext(expression(options), context);
+  assert.equal(result.event_url, publicUrl); assert.equal(navigation, 1); assert.equal(requests, 1);
+});
+test('QR navigation on control page reuses it without requiring router', async () => {
+  const result = await vm.runInNewContext(qrNavigationExpression({event, action: 'qr', kind: 'event', navigate: true}), qrContext(publicUrl));
+  assert.equal(result.navigation_only, true);
+});
+test('QR navigation refuses unrelated event and stale source component', async () => {
+  for (const mismatch of ['event', 'component']) {
+    const context = qrContext(publicUrl);
+    context.location = {...location, hash: '#/trialClientSet?ssid=SYNTHETIC'};
+    if (mismatch === 'event') context.document.body.innerText = 'unrelated event';
+    else context.document.querySelectorAll()[0].__vue__.ssid = 'other-event';
+    await assert.rejects(vm.runInNewContext(qrNavigationExpression({event, action: 'qr', kind: 'event', navigate: true}), context));
+  }
+});
+test('QR navigation refuses redirects to a different event', async () => {
+  const context = qrContext(publicUrl), v = context.document.querySelectorAll()[0].__vue__;
+  context.location = {...location, hash: '#/trialClientSet?ssid=SYNTHETIC'};
+  v.$router = {push: async () => {context.location.hash = '#/trialScreenSet?ssid=other-event';}};
+  await assert.rejects(vm.runInNewContext(qrNavigationExpression({event, action: 'qr', kind: 'event', navigate: true}), context), /changed event/);
+});
+test('QR stale component cannot read another event code', async () => {
+  const context = qrContext(publicUrl), v = context.document.querySelectorAll()[0].__vue__;
+  v.ssid = 'other-event'; v.utilPost.sendPost = async () => {assert.fail('must not query stale event');};
+  await assert.rejects(vm.runInNewContext(expression({event, action: 'qr', kind: 'event'}), context), /stale component/);
+});
+test('QR changed event during request and missing image are rejected', async () => {
+  for (const reason of ['changed', 'missing']) {
+    const context = qrContext(publicUrl), v = context.document.querySelectorAll()[0].__vue__;
+    v.utilPost.sendPost = async () => {
+      if (reason === 'changed') v.ssid = 'other-event';
+      return {isSuccess: true, content: {url: publicUrl}};
+    };
+    await assert.rejects(vm.runInNewContext(expression({event, action: 'qr', kind: 'event'}), context), /event changed|image missing/);
+  }
+});
+test('automatic navigation is limited to QR reads', () => {
+  assert.throws(() => validateOptions({event, action: 'report', kind: 'getCjcData', navigate: true}));
 });

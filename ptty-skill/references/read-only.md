@@ -8,10 +8,10 @@
 node scripts/ptty_readonly.mjs --session /secure/browser-session.json --event SS目标ID --action snapshot --out snapshot.json
 node scripts/ptty_readonly.mjs --session /secure/browser-session.json --event SS目标ID --action plan --out plan.json
 node scripts/ptty_readonly.mjs --session /secure/browser-session.json --event SS目标ID --action report --kind getCjcData --out 成绩册.xlsx
-node scripts/ptty_readonly.mjs --session /secure/browser-session.json --event SS目标ID --action qr --kind event --out 比赛二维码.png
+node scripts/ptty_readonly.mjs --session /secure/browser-session.json --event SS目标ID --action qr --kind event --navigate --out 比赛二维码.png
 ```
 
-先手动或用可用浏览器工具进入相应赛事。`plan` 需在“竞赛方案”；`report` 需在“出单管理”；`qr` 需在“比赛控制”。工具同时核对路由与组件，不在演示向导或同名组件的其他页面发请求。`snapshot` 只读取导航、组件名和赛事ID；不输出整页人员/联系方式。页面组件或字段变化时明确失败，检查页面后再更新适配器。报表和二维码读取结束或异常后恢复共享请求对象，报表还恢复原标签与项目选择；仍须串行调用。
+先手动或用可用浏览器工具进入相应赛事。`plan` 需在“竞赛方案”；`report` 需在“出单管理”；`qr` 需在“比赛控制”，可加`--navigate`从已核对身份的当前赛事自动进入该页；此导航不改变业务设置，导航后重新核对赛事及组件。工具同时核对路由与组件，不在演示向导或同名组件的其他页面发请求。`snapshot` 只读取导航、组件名和赛事ID；不输出整页人员/联系方式。页面组件或字段变化时明确失败，检查页面后再更新适配器。报表和二维码读取结束或异常后恢复共享请求对象，报表还恢复原标签与项目选择；仍须串行调用。
 
 `plan` 返回当前页及筛选信息，只有页码1、总数等于读取行数且没有搜索/筛选时才标 `complete:true`。`complete:false` 时不能称全量方案；按页面只读清除筛选或逐页收集，并核对总数与唯一项目阶段ID。计划界面当前默认每页500条，不能把这个容量当成永远不会分页的保证。
 

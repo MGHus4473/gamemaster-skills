@@ -43,6 +43,7 @@ export function validatePublicEventUrl(value) {
 export function validateOptions(o) {
   if (!/^SS[0-9]{6}[A-Z]+[0-9]+$/.test(o.event || '')) throw Error('explicit plain event ID is required');
   if (!['snapshot', 'plan', 'matches', 'report', 'qr'].includes(o.action)) throw Error('unsupported read-only action');
+  if (o.navigate !== undefined && (typeof o.navigate !== 'boolean' || (o.navigate && o.action !== 'qr'))) throw Error('navigation is only supported for QR export');
   if (o.action === 'matches' && o.projectIds) throw Error('match inventory must cover the whole event');
   if (o.action === 'report' && !REPORTS.includes(o.kind)) throw Error('report method is not allowlisted');
   if (o.action === 'qr' && !QR_KINDS.includes(o.kind)) throw Error('unsupported QR kind');
@@ -55,6 +56,35 @@ export function assertPageForAction(location, action) {
   if (action === 'snapshot') return;
   const route = location.hash.split('?')[0].replace(/^#/, '');
   if (!expected[action] || route !== expected[action]) throw Error('open the verified route for this read action');
+}
+
+export function qrNavigationExpression(options) {
+  const o = validateOptions(options);
+  if (o.action !== 'qr' || !o.navigate) throw Error('explicit QR navigation required');
+  return `(${async function (opts, assertAdmin) {
+    assertAdmin(location);
+    const initial = location.hash;
+    const params = new URLSearchParams(initial.split('?')[1] || '');
+    const ssid = params.get('ssid');
+    if (!ssid || params.getAll('ssid').length !== 1 || !document.body.innerText.includes(opts.event + '/')) throw Error('enter the identified event first');
+    const components = () => [...new Set([...document.querySelectorAll('*')].map(e => e.__vue__).filter(Boolean))];
+    if (initial.split('?')[0] !== '#/trialScreenSet') {
+      const routers = [...new Set(components().filter(v => v.ssid === ssid && v.$router).map(v => v.$router))];
+      if (routers.length !== 1) throw Error('current event router unavailable or ambiguous');
+      await routers[0].push({path: '/trialScreenSet', query: {ssid}});
+    }
+    const deadline = Date.now() + 10000;
+    while (Date.now() < deadline) {
+      assertAdmin(location);
+      const query = new URLSearchParams(location.hash.split('?')[1] || '');
+      if (location.hash.split('?')[0] !== '#/trialScreenSet' || query.get('ssid') !== ssid || query.getAll('ssid').length !== 1)
+        throw Error('navigation changed event');
+      const targets = components().filter(v => v.$options?.name === 'TrialScreenSet' && v.ssid === ssid && v.utilPost?.sendPost);
+      if (targets.length === 1 && document.body.innerText.includes(opts.event + '/')) return {event: opts.event, route: '#/trialScreenSet', navigation_only: true};
+      await new Promise(r => setTimeout(r, 100));
+    }
+    throw Error('match-control page did not become ready');
+  }.toString()})(${JSON.stringify(o)},${assertAdminLocation.toString()})`;
 }
 
 export function expression(options) {
@@ -157,6 +187,10 @@ export function expression(options) {
               base64: btoa(raw), content_type: r.headers.get('content-type')};
     }
     const v = get('TrialScreenSet');
+    const route = location.hash, routeEvent = new URLSearchParams(route.split('?')[1] || '');
+    if (!v.ssid || routeEvent.getAll('ssid').length !== 1 || v.ssid !== routeEvent.get('ssid') || !v.utilPost?.sendPost)
+      throw Error('QR event binding unavailable or stale component');
+    const binding = v.ssid;
     const request = opts.kind === 'event'
       ? {headerData: {ssid: v.ssid, op: 'trialItemGl', methodName: 'generateQrCode'}, busData: {ssid: v.ssid}}
       : {headerData: {ssid: '', op: 'ssGl', methodName: opts.kind === 'referee' ? 'getCpyTwoCode' : 'getPadTwoCode'}, busData: {ssidEn: v.ssid}};
@@ -166,9 +200,12 @@ export function expression(options) {
       v.utilPost.paramData = request;
       response = await v.utilPost.sendPost();
     } finally { v.utilPost.paramData = previousRequest; }
-    if (!response.isSuccess) throw Error('platform QR export failed');
+    if (location.hash !== route || v.ssid !== binding || !document.body.innerText.includes(opts.event + '/')) throw Error('event changed during QR export');
+    if (!response?.isSuccess) throw Error('platform QR export failed');
+    const base64 = opts.kind === 'event' ? response.content?.qrCodeBase64 : response.content;
+    if (typeof base64 !== 'string' || !base64) throw Error('platform QR image missing');
     const entryCheck = opts.kind === 'event' ? checkPublicUrl(response.content.url) : undefined;
-    return {event: opts.event, kind: opts.kind, base64: opts.kind === 'event' ? response.content.qrCodeBase64 : response.content,
+    return {event: opts.event, kind: opts.kind, base64,
             event_url: opts.kind === 'event' ? response.content.url : undefined, entry_check: entryCheck};
   }.toString()})(${JSON.stringify(o)},${assertAdminLocation.toString()},${validatePublicEventUrl.toString()},${assertPageForAction.toString()})`;
 }
@@ -209,19 +246,21 @@ export function decodeFile(result, action, path) {
 
 async function main() {
   const argv = process.argv.slice(2);
-  if (argv.includes('--help')) { console.log('ptty_readonly.mjs --session FILE --event SS... --action snapshot|plan|matches|report|qr --out FILE [--kind REPORT_OR_QR_KIND] [--project-ids XM...,XM...]'); return; }
+  if (argv.includes('--help')) { console.log('ptty_readonly.mjs --session FILE --event SS... --action snapshot|plan|matches|report|qr --out FILE [--kind REPORT_OR_QR_KIND] [--project-ids XM...,XM...] [--navigate (qr only)]'); return; }
   const options = {};
-  for (let i = 0; i < argv.length; i += 2) {
+  for (let i = 0; i < argv.length; i++) {
     const key = argv[i];
+    if (key === '--navigate') { options.navigate = true; continue; }
     if (!['--session','--event','--action','--out','--kind','--project-ids'].includes(key) || !argv[i + 1]) throw Error('invalid command arguments');
-    options[key.slice(2)] = argv[i + 1];
+    options[key.slice(2)] = argv[++i];
   }
   if (!options.session || !options.out) throw Error('--session and --out are required');
-  const query = validateOptions({event: options.event, action: options.action, kind: options.kind, projectIds: options['project-ids']?.split(',')});
+  const query = validateOptions({event: options.event, action: options.action, kind: options.kind, navigate: options.navigate, projectIds: options['project-ids']?.split(',')});
   const paths = [options.out, options.out + '.metadata.json'];
   if (query.action === 'qr' && query.kind === 'event') paths.push(options.out + '.url.txt');
   for (const path of paths) { try { await access(path); throw Error('output already exists'); } catch (e) { if (e.code !== 'ENOENT') throw e; } }
   const session = JSON.parse(await readFile(options.session, 'utf8'));
+  if (query.navigate) await evaluate(session.pageSocket, qrNavigationExpression(query));
   const result = await evaluate(session.pageSocket, expression(query));
   const bytes = ['report','qr'].includes(query.action) ? decodeFile(result, query.action, options.out) : Buffer.from(JSON.stringify(result, null, 2) + '\n');
   await mkdir(dirname(resolve(options.out)), {recursive: true});

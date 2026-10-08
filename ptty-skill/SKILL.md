@@ -28,7 +28,7 @@ description: 操作跑兔体育（ptty.com.cn）的赛事、报名、抽签、�
 |独立计算结果上传、平台 ID 绑定、导入边界|[交接与身份映射](references/handoff.md)|
 |成绩、名单、抽签、秩序册及场序表下载|[报表与只读工具](references/read-only.md)，`scripts/ptty_readonly.mjs`|
 |签到检录、控场、比分修正、团体名单、通知、权限和财务|[现场与账户操作](references/live-operations.md)|
-|赛事二维码、裁判小程序码、PAD码，定制logo和底部文字|[二维码](references/qr-codes.md)，`scripts/qr_export.py`|
+|赛事二维码、裁判小程序码、PAD码，定制logo和底部文字|[二维码获取与交付](references/qr-codes.md)；先用`ptty_readonly.mjs --action qr --kind event --navigate`从平台取码，再按[草料流程](references/qr-cli-im.md)美化，用`verify_qr.py`验收；不默认要求用户提供平台已有的入口|
 
 规程、补充公告、开闭幕致辞和规则解释先由离线 skill 制作；要求发布时再传入对应页面，发布或通知范围遵循用户明确指令。规则变化、收费、退款、开赛和结果更正不由“完成赛事创建”自动推定。
 
