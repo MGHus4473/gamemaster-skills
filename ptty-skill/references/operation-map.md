@@ -35,8 +35,8 @@ python scripts/operation_catalog.py preflight 赛事工作区/操作预检.json
 |---|---|
 |`/trialMainNavIndex`、`/index`|运动模块、[切换用户和赛事检索](event-user-filter.md)、创建/编辑/复制/删除；[网站身份](website.md)、[创建发布](publication.md)|
 |`/trialReportIndex`|报名组别、资格限项、费用、人员/单位/项目/团体、白黑名单、会员优惠、交易；[现场操作](live-operations.md)|
-|`/trialGhIndex`、`/trialRmdGlIndex`|竞赛方案、阶段计分排名、人数同步、最终名单及锁定；[平台流程](platform-workflow.md)|
-|`/trialScGlIndex`、`/trialCqIndex`|生成或重置比赛场次、分组容量、种子和签位；[平台流程](platform-workflow.md)、[文件交接](handoff.md)|
+|`/trialGhIndex`、`/trialRmdGlIndex`|[首次生成比赛场次](match-generation.md)、竞赛方案、阶段计分排名、人数同步、最终名单及锁定；[平台流程](platform-workflow.md)|
+|`/trialScGlIndex`、`/trialCqIndex`|查询、删除或重置已有比赛场次、分组容量、种子和签位；[平台流程](platform-workflow.md)、[文件交接](handoff.md)|
 |`/trialSsBpIndex`|网格/场序、自动或自定义编排、移动、清空、小节；[平台流程](platform-workflow.md)、[小节发布](publication.md)|
 |`/aiSchedulePage`、`/trialAiGlIndex`、`/chatBotIndex`|AI候选、应用结果、知识库案例、AI聊天/创建；计算与保存分开|
 |`/trialScreenSet`|各端控制、小节开放、通知、二维码、签名和弃权等设置；[现场操作](live-operations.md)、[二维码](qr-codes.md)|
@@ -61,5 +61,6 @@ python scripts/operation_catalog.py preflight 赛事工作区/操作预检.json
 - 组件名有重复：赛程管理和赛事编排都叫 `TrialSsBpIndex`；首页/赛事列表都可叫 `Index`；财务和裁判库也有同名组件。定位须联合路由、组件方法、赛事和运动，不按组件名一项决定操作。
 - 当前运动首页对羽毛球进入 `/index`，乒乓球/匹克球走另外的单点跳转，其他分支提示未开放。本目录不能直接套用于乒乓球、匹克球或网球后台。
 - 页面开关可能立即保存；查询/编辑共用一个方法；生成候选也可能保存历史。禁止为“遍历功能”依次点击所有按钮。
+- 首次生成在竞赛方案页 `/trialGhIndex` 的 `createScHandler`；赛程管理的 `initScInfo` 是重置场次号/二阶段交叉/淘汰晋级数，不是首次创建。`matches.generate`已纠正到前者，过程和验收见[首次场次生成](match-generation.md)。
 - 方案页“生成赛程”实际调用 `scGl/czSc` 的 `type=create`，页面提示会清空赛程和编排，不能当成只新增。充值页 `getBmPayZjeHandler` 查询金额后继续 `payHandler` 创建订单，不能因为函数名带get就作为只读工具。赛事列表“确认对账”也会写入状态。
 - 赛程管理“导出所有场次，更新赛号”是带更新语义的导出，不能并入只读白名单；是否改变赛号、CCH或其他映射需前后回读确认。只看现有场次时使用出单管理场序表，不触发此按钮。

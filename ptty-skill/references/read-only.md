@@ -15,6 +15,20 @@ node scripts/ptty_readonly.mjs --session /secure/browser-session.json --event SS
 
 `plan` 返回当前页及筛选信息，只有页码1、总数等于读取行数且没有搜索/筛选时才标 `complete:true`。`complete:false` 时不能称全量方案；按页面只读清除筛选或逐页收集，并核对总数与唯一项目阶段ID。计划界面当前默认每页500条，不能把这个容量当成永远不会分页的保证。
 
+此工具仅是读取白名单，不是平台全部能力目录。它没有场次创建动作时，查[首次场次生成](match-generation.md)并使用已授权的浏览器操作；宿主缺少浏览器能力应如实说明工具缺口，不能推断平台没有入口。
+
+## 全量比赛场次
+
+在“赛程管理”`/trialScGlIndex`使用`--action matches`，按无筛选`scGl/mainLoadData`汇总、逐项目`getDwInfo`明细、再读汇总的顺序，核对总场数、项目场数、赛事身份与CCH唯一性。返回`match_count/matches_present/projects/rows`；未知计数、接口失败、明细不全、读取期间状态变化都报错，不转成零场次。汇总最多取1000项，若项目场数之和不足全赛总数，必须补做分页，工具不会声称完整。
+
+同一路由只变`ssid`时，当前Vue组件可能继续持有旧赛事；工具会同时核对路由ssid、组件ssid与页面明文赛事ID。发现不一致时先返回赛事列表再进入目标赛事，等加载完成后重读，不能把失败改写成空列表。
+
+该动作不接受项目子集，不改变页面搜索词，不生成或重置场次；时间场地和完整依赖验收仍单独执行。两个页面组件同名，不能在`/trialSsBpIndex`调用此动作。名单或种子不等于已有签位；有签位却读到零场次时，按[矛盾状态处理](match-generation.md)复查，不能删签重建。
+
+```bash
+node scripts/ptty_readonly.mjs --session /secure/browser-session.json --event SS目标ID --action matches --out 全量场次.json
+```
+
 ## 出单管理
 
 |报表|当前方法名|用途|

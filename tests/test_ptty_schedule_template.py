@@ -29,6 +29,46 @@ def sample():
 
 
 class PopulatedTemplate(unittest.TestCase):
+    def test_four_match_export_keeps_rest_gap_and_parallel_opposite_paths(self):
+        matches = [match('semi-a', athletes=['a', 'b'], possible_athletes=['a', 'b'], round=1),
+                   match('semi-b', athletes=['c', 'd'], possible_athletes=['c', 'd'], round=1)]
+        for mid, kind in [('final', 'winner'), ('bronze', 'loser')]:
+            matches.append(match(mid, round=2, possible_athletes=['a', 'b', 'c', 'd'],
+                                 sides=[{'kind': kind, 'match_id': p, 'label': p + ' ' + kind}
+                                        for p in ('semi-a', 'semi-b')]))
+            matches[-1]['predecessors'] = ['semi-a', 'semi-b']
+        book = Workbook(); book.active.title = '赛事编排工作表'
+        book.active.append(['日期', '时间', '场序', '第1号场地', '第2号场地', '第3号场地', '第4号场地'])
+        sheet = book.create_sheet('场次工作表')
+        sheet.append(['项目ID', '项目全称', '赛事种类', '轮次'])
+        for m in matches:
+            m.update(platform_match_id='SYNTHETIC-' + m['id'], platform_project_id='SYNTHETIC-P',
+                     platform_display_code='CODE-' + m['id'], platform_format='TT',
+                     project_name='合成单打', code=m['id'], duration_minutes=30)
+            m.setdefault('sides', [{'label': x} for x in m['athletes']])
+            card = '\n'.join([m['platform_display_code'], '合成比赛', '?-?', '单位A VS 单位B',
+                              '选手A 选手B', m['platform_match_id']])
+            sheet.append(['SYNTHETIC-P', '合成单打', 'TT', '第' + str(m['round']) + '轮', card])
+        data = fixture(matches, start='09:00', end='12:00', courts=(1, 2, 3, 4),
+                       outcome_disjoint_pairs=[['final', 'bronze']])
+        data.update(slot_minutes=30, rest_minutes=30, conflict_scope='possible')
+        result = engine.schedule(data)
+        with tempfile.TemporaryDirectory() as directory:
+            paths = [Path(directory) / (n + '.xlsx') for n in ('template', 'output', 'review')]
+            book.save(paths[0]); report = adapter.export(data, result, *paths, ROOT / 'gamemaster-skill')
+            self.assertEqual(report['matches'], 4)
+            grid = load_workbook(paths[1]).worksheets[0]
+            starts = {}
+            for row in grid.iter_rows(min_row=2, values_only=True):
+                for cell in row[3:]:
+                    if cell: starts[cell.strip().splitlines()[-1]] = row[1]
+            self.assertEqual(starts, {'SYNTHETIC-semi-a': '09:00', 'SYNTHETIC-semi-b': '09:00',
+                                      'SYNTHETIC-final': '10:00', 'SYNTHETIC-bronze': '10:00'})
+            self.assertEqual(grid['B3'].value, '09:30')
+            self.assertTrue(all(c.value is None for c in grid[3][3:]))
+            self.assertEqual(result['metrics']['occupied_scenes'], 2)
+            self.assertEqual(result['metrics']['scene_span'], 3)
+
     def test_doubles_card_and_repeated_header_full_export(self):
         book, m = sample(); sheet = book.worksheets[1]
         m['platform_event_type'] = 'MD'

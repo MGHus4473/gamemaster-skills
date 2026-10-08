@@ -231,9 +231,22 @@
       "id": "matches.export_renumber",
       "title": "导出所有场次并更新赛号",
       "kind": "write",
-      "methods": ["UploadCurrCom/downSubmitHandler", "POST /trialExcelMb (op=scGl)"],
-      "requires": ["target_identity", "role_access", "renumber_scope"],
-      "impacts": ["matches", "draw", "schedule", "results", "reports"],
+      "methods": [
+        "UploadCurrCom/downSubmitHandler",
+        "POST /trialExcelMb (op=scGl)"
+      ],
+      "requires": [
+        "target_identity",
+        "role_access",
+        "renumber_scope"
+      ],
+      "impacts": [
+        "matches",
+        "draw",
+        "schedule",
+        "results",
+        "reports"
+      ],
       "acceptance": "页面明确标注更新赛号；核对赛号与CCH等引用实际改变范围，不作为普通只读导出。仅需查看现有场次时使用出单管理场序表",
       "evidence": "static"
     },
@@ -715,7 +728,7 @@
     },
     {
       "id": "plan.generate",
-      "title": "从竞赛方案生成并覆盖赛程",
+      "title": "重新生成并覆盖已有赛程（首次生成见matches.generate）",
       "kind": "write",
       "methods": [
         "scGl/czSc (type=create)"
@@ -725,7 +738,9 @@
         "role_access",
         "plan_confirmed",
         "roster_complete",
-        "generation_scope"
+        "generation_scope",
+        "destructive_scope",
+        "generation_contract_current"
       ],
       "impacts": [
         "matches",
@@ -874,31 +889,41 @@
         "role_access"
       ],
       "impacts": [],
-      "acceptance": "场数轮空依赖完整性",
-      "evidence": "static"
+      "acceptance": "ptty_readonly.mjs --action matches：无筛选汇总与逐项目getDwInfo核对场数及CCH身份；失败/缺项不视为零场次；另核验轮空依赖",
+      "evidence": "readonly"
     },
     {
       "id": "matches.generate",
-      "title": "生成比赛场次",
+      "title": "首次生成比赛场次（竞赛方案页；已有签位时先全量复查）",
       "kind": "write",
       "methods": [
-        "initScInfo"
+        "createScHandlerOpenModal",
+        "createScHandler",
+        "scGl/czSc (type=create)"
       ],
       "requires": [
         "target_identity",
         "role_access",
         "plan_confirmed",
         "roster_complete",
-        "generation_scope"
+        "generation_scope",
+        "event_matches_empty",
+        "draw_snapshot_saved",
+        "generation_contract_current",
+        "event_draw_empty"
       ],
       "impacts": [
         "matches",
         "draw",
         "schedule",
-        "sections"
+        "sections",
+        "results"
       ],
-      "acceptance": "CCH结构与对阵来源",
-      "evidence": "static"
+      "acceptance": "全量核实无场次且无签位才首次生成；已有签位却零场次先复查。返回存在未删除抽签信息即停止，不删签绕过；核对逐阶段场数、轮空、CCH与依赖",
+      "evidence": "write_readback",
+      "route": "/trialGhIndex",
+      "component": "TrialGhIndex",
+      "op": "scGl"
     },
     {
       "id": "matches.groups",
@@ -922,10 +947,12 @@
     },
     {
       "id": "matches.reset",
-      "title": "清空重置已有赛程",
+      "title": "删除赛程或重置场次号、二阶段交叉方式、淘汰晋级数",
       "kind": "write",
       "methods": [
-        "czSc"
+        "scGl/czSc (type=delete)",
+        "initScInfoHandler",
+        "scGl/initScInfo (TYPE=CCHGZ/EJDJWGZ/CZERJDJJS)"
       ],
       "requires": [
         "target_identity",
@@ -939,7 +966,7 @@
         "sections",
         "results"
       ],
-      "acceptance": "旧引用失效范围",
+      "acceptance": "明确选择删除或重置模式；initScInfo不是首次创建入口；核对旧引用失效及下游影响",
       "evidence": "static"
     },
     {

@@ -42,7 +42,8 @@ export function validatePublicEventUrl(value) {
 
 export function validateOptions(o) {
   if (!/^SS[0-9]{6}[A-Z]+[0-9]+$/.test(o.event || '')) throw Error('explicit plain event ID is required');
-  if (!['snapshot', 'plan', 'report', 'qr'].includes(o.action)) throw Error('unsupported read-only action');
+  if (!['snapshot', 'plan', 'matches', 'report', 'qr'].includes(o.action)) throw Error('unsupported read-only action');
+  if (o.action === 'matches' && o.projectIds) throw Error('match inventory must cover the whole event');
   if (o.action === 'report' && !REPORTS.includes(o.kind)) throw Error('report method is not allowlisted');
   if (o.action === 'qr' && !QR_KINDS.includes(o.kind)) throw Error('unsupported QR kind');
   if (o.projectIds && (!Array.isArray(o.projectIds) || !o.projectIds.length || new Set(o.projectIds).size !== o.projectIds.length || o.projectIds.some(x => !/^XM[0-9]{6}[A-Z]+[0-9]+$/.test(x)))) throw Error('invalid or duplicate project IDs');
@@ -50,7 +51,7 @@ export function validateOptions(o) {
 }
 
 export function assertPageForAction(location, action) {
-  const expected = {plan: '/trialGhIndex', report: '/trialCdGlIndex', qr: '/trialScreenSet'};
+  const expected = {plan: '/trialGhIndex', matches: '/trialScGlIndex', report: '/trialCdGlIndex', qr: '/trialScreenSet'};
   if (action === 'snapshot') return;
   const route = location.hash.split('?')[0].replace(/^#/, '');
   if (!expected[action] || route !== expected[action]) throw Error('open the verified route for this read action');
@@ -67,6 +68,54 @@ export function expression(options) {
     const components = [...new Set([...document.querySelectorAll('*')].map(e => e.__vue__).filter(Boolean))];
     const get = name => { const v = components.find(x => x.$options.name === name); if (!v) throw Error('open required page: ' + name); return v; };
     if (opts.action === 'snapshot') return {event: opts.event, route: location.hash.split('?')[0], components: [...new Set(components.map(v => v.$options.name).filter(Boolean))], menus: [...document.querySelectorAll('.el-menu-item,.el-submenu__title')].map(e => e.innerText.trim()).filter(Boolean)};
+    if (opts.action === 'matches') {
+      const v = get('TrialSsBpIndex');
+      const routeEvent = new URLSearchParams(location.hash.split('?')[1] || '').get('ssid');
+      if (v.op !== 'scGl' || !v.ssid || v.ssid !== routeEvent || !v.utilPost?.sendPost) throw Error('match-management contract unavailable or stale event component');
+      const binding = v.ssid, route = location.hash, previous = v.utilPost.paramData;
+      const integer = value => {
+        if (!/^(0|[1-9][0-9]*)$/.test(String(value)) || !Number.isSafeInteger(Number(value))) throw Error('unknown match count');
+        return Number(value);
+      };
+      const call = async (methodName, busData) => {
+        if (location.hash !== route || v.ssid !== binding || !document.body.innerText.includes(opts.event + '/')) throw Error('event changed');
+        v.utilPost.paramData = {headerData: {ssid: binding, op: 'scGl', methodName}, busData};
+        const r = await v.utilPost.sendPost();
+        if (!r?.isSuccess || !Array.isArray(r.content)) throw Error('match read failed; absence not established');
+        return r;
+      };
+      const summary = async () => {
+        const r = await call('mainLoadData', {pageSet: {currentPage: 1, pageSize: 1000, totalNums: 0}, search: {xmqc: ''}});
+        const totals = Object.fromEntries(['zcsCount', 'ywcCount', 'wwcCount', 'jxzCount'].map(k => [k, integer(r.lsData?.[k])]));
+        const seen = new Set();
+        const projects = r.content.map(row => {
+          if (row.SSID !== opts.event || typeof row.XMID !== 'string' || !row.XMID || seen.has(row.XMID)) throw Error('invalid project/event identity');
+          seen.add(row.XMID);
+          return {project_id: row.XMID, matches: integer(row.ZCS)};
+        }).sort((a, b) => a.project_id.localeCompare(b.project_id));
+        if (projects.reduce((n, p) => n + p.matches, 0) !== totals.zcsCount) throw Error('incomplete project inventory; collect remaining pages');
+        if (Object.values(totals).some(n => n > totals.zcsCount)) throw Error('inconsistent status counts');
+        return {totals, projects};
+      };
+      try {
+        const before = await summary(), rows = [], seen = new Set();
+        for (const p of before.projects) {
+          const r = await call('getDwInfo', {xmid: p.project_id, islk: '0'});
+          if (r.content.length !== p.matches) throw Error('detail count differs from summary');
+          for (const m of r.content) {
+            if (m.SSID !== opts.event || m.XMID !== p.project_id || typeof m.CCH !== 'string' || !m.CCH || seen.has(m.CCH)) throw Error('invalid or duplicate match identity');
+            seen.add(m.CCH);
+            const keys = ['XMID', 'CCH', 'JD', 'FJ', 'SSZL', 'LCH', 'CS', 'ISLK', 'ISPLAY', 'ISKS', 'XJ', 'ZNWZH1', 'ZNWZH2', 'POSSWZH1', 'POSSWZH2', 'DZCCH', 'STARTMC', 'ENDMC'];
+            rows.push(Object.fromEntries(keys.filter(k => m[k] !== undefined).map(k => [k, m[k]])));
+          }
+        }
+        const after = await summary();
+        if (JSON.stringify(before) !== JSON.stringify(after) || location.hash !== route || v.ssid !== binding) throw Error('inventory changed during read; refresh');
+        return {event: opts.event, complete: true, read_only: true, captured_at: new Date().toISOString(),
+          match_count: rows.length, matches_present: rows.length > 0, projects: before.projects, totals: before.totals, rows,
+          note: 'Counts and identities checked against the unfiltered event summary; timings, draw preservation and dependency validation require separate readback.'};
+      } finally { v.utilPost.paramData = previous; }
+    }
     if (opts.action === 'plan') {
       const v = get('TrialGhIndex');
       const fields = ['XMID', 'XMBH', 'XMJC', 'XMQC', 'SSLX', 'RCOUNT', 'JD', 'FJ', 'SZZLDM', 'ZS', 'JJS', 'JS', 'FZ', 'FSSX', 'PMMS', 'QSMC', 'QJDZS', 'QJDQSMC', 'QJDJZMC', 'FZLXID', 'ISHB'];
@@ -160,7 +209,7 @@ export function decodeFile(result, action, path) {
 
 async function main() {
   const argv = process.argv.slice(2);
-  if (argv.includes('--help')) { console.log('ptty_readonly.mjs --session FILE --event SS... --action snapshot|plan|report|qr --out FILE [--kind REPORT_OR_QR_KIND] [--project-ids XM...,XM...]'); return; }
+  if (argv.includes('--help')) { console.log('ptty_readonly.mjs --session FILE --event SS... --action snapshot|plan|matches|report|qr --out FILE [--kind REPORT_OR_QR_KIND] [--project-ids XM...,XM...]'); return; }
   const options = {};
   for (let i = 0; i < argv.length; i += 2) {
     const key = argv[i];

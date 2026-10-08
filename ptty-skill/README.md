@@ -11,9 +11,10 @@
 | 赛事、报名、方案、名单、抽签与编排 | 当前页面操作流程及接口合同；核对赛事和版本后操作与回读 |
 | 操作定位与影响分析 | 31个功能域、109类操作的离线检索和前置状态预检；区分改名/替补、调组/方案调整、调场/重建 |
 | 账号下用户筛选 | 当前可见用户切换、检索及分页，核对实际赛事归属；`ptty_events.mjs`不改变登录身份 |
+| 已有签位、无比赛场次 | [竞赛方案页首次生成](references/match-generation.md)，先全量复查矛盾读数，已有场次直接编排；`prepare_match_generation.py`离线准备请求，不执行线上写入 |
 | 任务范围与失败恢复 | 动作计划范围校验、三份快照比较、未生效行定位及哈希日志；工具不自动重试或执行 |
 | 签到、控场、团体名单与成绩更正 | 对象与状态说明、下游晋级复核；通知、权限及财务单独识别范围 |
-| 查询与报表下载 | `ptty_readonly.mjs`：白名单只读工具，使用已有浏览器 CDP 会话 |
+| 查询与报表下载 | `ptty_readonly.mjs`：白名单只读工具；`--action matches`全量核对场次，拒绝将空页面或失败回执当作零场次 |
 | 创建、图片、规程与通知 | 页面流程、字段规范；`publication_packet.py` 离线整理内容、资产与请求模板 |
 | 秩序册、节目单与小节发布 | 区分项目可见性、小节分配、手机/裁判/出场名单各端开关，逐项回读 |
 | 抽签和编排导入表 | 使用当前平台模板和真实 ID，将离线结果转为平台文件并附审阅表 |
@@ -48,6 +49,7 @@ python scripts/operation_catalog.py search "调组"
 python scripts/operation_catalog.py show live.score
 python scripts/operation_catalog.py preflight 操作预检.json
 python scripts/task_contract.py 任务合同.json
+python scripts/prepare_match_generation.py 首次生成输入.json --out 首次生成请求.json
 python scripts/workflow_state.py 恢复输入.json --out 新比较结果.json --journal 操作回执.jsonl
 python scripts/publication_packet.py prepare 发布说明.json 新发布包目录
 python scripts/publication_packet.py validate 新发布包目录/publication-packet.json
